@@ -46,11 +46,17 @@ class SequencerCore {
 
   SequencerCore();
   ~SequencerCore();
+
  private:
   stepPatternChain* myPatternChain;
   stepPattern* patterns[16];
   stepPattern* myPattern;
   int myPatternNumber;
+
+  stepPattern* createBlankPattern();
+  int playing;
+  int alive;
+  int sequenceId;
 };
 
 #endif //  _SEQUENCERCORE_HPP_

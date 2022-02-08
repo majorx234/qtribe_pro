@@ -41,4 +41,22 @@ struct midiMessage {
   jack_nframes_t timestamp;
 };
 
+//alias our sample typedef to something easier to type
+typedef jack_default_audio_sample_t sample_t;
+
+double nframes_to_ms(jack_nframes_t);
+void queue_message(struct midiMessage*);
+void queue_message(double ms,int c,int b0, int b1, int b2);
+void queue_new_message(int,int, int, int);
+void process_midi_output(jack_nframes_t);
+int jack_processCallback (jack_nframes_t, void*);
+int jack_setSampleRate (jack_nframes_t, void*);
+void jack_errorCallback (const char*);
+void jack_shutdown (void*);
+
+double getJackTime();
+
+int initJACK();
+int disconnectJACK();
+
 #endif // _JACKIO_HPP_
