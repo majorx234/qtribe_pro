@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _STEPSEQUENCE_H_
-#define _STEPSEQUENCE_H_
+#ifndef _STEPSEQUENCE_HPP_
+#define _STEPSEQUENCE_HPP_
 
 #include <string>
 #include <fstream>
@@ -181,4 +181,4 @@ class stepPatternChain
     bool loopMode;
   };
 
-#endif
+#endif // _STEPSEQUENCE_HPP_
