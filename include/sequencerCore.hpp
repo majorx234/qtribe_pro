@@ -30,6 +30,7 @@ class SequencerCore {
   void initSequencer();
   void cleanup();
   void setPattern(int i);
+  void run();
   
   stepPatternChain* getPatternChain();
   stepPattern* getCurrentPattern();
@@ -57,6 +58,7 @@ class SequencerCore {
   int playing;
   int alive;
   int sequenceId;
+  int backendInitialised;
 };
 
 #endif //  _SEQUENCERCORE_HPP_

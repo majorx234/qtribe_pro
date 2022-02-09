@@ -47,15 +47,23 @@ QT5_WRAP_CPP(STEP_SEQUENCER_WIDGET_MOCrcs ${STEP_SEQUENCER_WIDGET_SOURCES})
 add_library(jackIO
 	${JACK_IO_SOURCES})
 
-add_library(stepSquence
+add_library(stepSequence
   ${STEP_SEQUENCE_SOURCES}
 )
+
+add_library(stepSequencerCore
+	${STEP_SEQUENCER_CORE_SOURCES})
+
+target_link_libraries(stepSequencerCore
+	jackIO
+	stepSequence
+	)
 
 add_library(stepSequencerWidget
 	${STEP_SEQUENCER_WIDGET_SOURCES}
 	${STEP_SEQUENCER_WIDGET_BASE_UISrcs}
 	${STEP_SEQUENCER_WIDGET_MOCrcs}
 	)
-target_link_libraries(stepSquence PRIVATE ${JACK_LIBRARIES})
+target_link_libraries(stepSequence PRIVATE ${JACK_LIBRARIES})
 
 qt5_use_modules(stepSequencerWidget Core Gui Widgets)
