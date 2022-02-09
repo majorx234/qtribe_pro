@@ -29,23 +29,20 @@
 #define MAX_SEQUENCES 16
 #define MAX_STEPS 128
 
-class step
-  {  
-  public:
-    int isOn;
-    int noteNumber;
-    int noteLength;
-    int noteVelocity;
-    int noteTonality;
-    step();
-    step(int,int,int,int,int);
-    ~step();
-    void serialise(FILE*);
-  };
+class step{  
+ public:
+  int isOn;
+  int noteNumber;
+  int noteLength;
+  int noteVelocity;
+  int noteTonality;
+  step();
+  step(int,int,int,int,int);
+  ~step();
+  void serialise(FILE*);
+};
 
-
-class stepSequence
-  {
+class stepSequence {
   std::string sequenceName;
   std::string sequenceType;
   
@@ -62,44 +59,37 @@ class stepSequence
   int arp;
   int arpLength;
 
-  public:
-    
-    int midiChannel;
-    int drumSequence;
-    int drumNote;
-    
-    
-    stepSequence();
-    ~stepSequence();
-    
-    const std::string getSequenceName();
-    void setSequenceName(const std::string);
-    
-    const std::string getSequenceType();
-    void setSequenceType(const std::string);
-    
-    void setSequenceLength(int);
-    int getMidiChannel();
-    void setMidiChannel(int);
-    int getMuted();
-    void setMuted(int);
+ public:    
+  int midiChannel;
+  int drumSequence;
+  int drumNote;
       
-    step* getStep(int);
-    step* getArpStep(int);
-    void serialise(FILE*);
+  stepSequence();
+  ~stepSequence();
+    
+  const std::string getSequenceName();
+  void setSequenceName(const std::string);
+    
+  const std::string getSequenceType();
+  void setSequenceType(const std::string);
+    
+  void setSequenceLength(int);
+  int getMidiChannel();
+  void setMidiChannel(int);
+  int getMuted();
+  void setMuted(int);
+      
+  step* getStep(int);
+  step* getArpStep(int);
+  void serialise(FILE*);
 
-    void arpeggiate();
-    void clearArp();
-    int getNextArpOffset(int);
-    int isArp();
-  };
+  void arpeggiate();
+  void clearArp();
+  int getNextArpOffset(int);
+  int isArp();
+};
 
-
-
-
-class stepPattern
-  {
-  
+class stepPattern {  
   int activeSequenceId;
   int patternTempo;
   int globalTempo;
@@ -109,76 +99,66 @@ class stepPattern
   std::string patternName;
   
   int drumAccentSequence;
-  
-  
-  
-  public:
-    stepPattern();
-    ~stepPattern();
+    
+ public:
+  stepPattern();
+  ~stepPattern();
       
+  stepSequence* getActiveSequence();
+  stepSequence* getSequence(int index);  
   
-    stepSequence* getActiveSequence();
-    stepSequence* getSequence(int index);  
-  
-    void setActiveSequence(int);
+  void setActiveSequence(int);
     
-    int addSequence(const std::string,const std::string,int);
-    void removeSequence(int);
+  int addSequence(const std::string,const std::string,int);
+  void removeSequence(int);
     
-    int getPatternLength();
-    void setPatternLength(int);
-    
-    
-    int getPatternTempo();
-
-    void setGlobalTempo(int);
-    void setPatternTempo(int);
-    
-    //TODO: Should really be a sequence attribute
-    void setDrumAccentSequence(int);
-    stepSequence* getDrumAccentSequence();
-
-    int getCurrentStepIndex();
-    void setCurrentStepIndex(int);
+  int getPatternLength();
+  void setPatternLength(int);
       
-    int nextStep();
-    void serialise(FILE*);
+  int getPatternTempo();
+
+  void setGlobalTempo(int);
+  void setPatternTempo(int);
     
-  private:
-    int nextFreeId();
-    int nextAssignedId();
+  //TODO: Should really be a sequence attribute
+  void setDrumAccentSequence(int);
+  stepSequence* getDrumAccentSequence();
+
+  int getCurrentStepIndex();
+  void setCurrentStepIndex(int);
+      
+  int nextStep();
+  void serialise(FILE*);
     
-    int currentStepIndex;
-  };
+ private:
+  int nextFreeId();
+  int nextAssignedId();
+    
+  int currentStepIndex;
+};
 
-
-
-class stepPatternChain
-  {
-  
+class stepPatternChain {
   int partsMuted[MAX_SEQUENCES];
   
-  public:
-    stepPatternChain();
-    ~stepPatternChain();    
-    void setPattern(int,int);
+ public:
+  stepPatternChain();
+  ~stepPatternChain();    
+  void setPattern(int,int);
     
-    int getCurrentPattern();
-    int getCurrentPatternIndex();
-    int getNextPattern();
-    int getPatternIndex(int);
+  int getCurrentPattern();
+  int getCurrentPatternIndex();
+  int getNextPattern();
+  int getPatternIndex(int);
 
-    void resetPatternMutes();
-    void setPartMuted(int, int);
-    
-    
-    
-    void serialise(FILE*);
+  void resetPatternMutes();
+  void setPartMuted(int, int);
+       
+  void serialise(FILE*);
 
-  private:
-    int patternArray[16];
-    int currentPattern;
-    bool loopMode;
-  };
+ private:
+  int patternArray[16];
+  int currentPattern;
+  bool loopMode;
+};
 
 #endif // _STEPSEQUENCE_HPP_
