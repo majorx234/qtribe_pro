@@ -14,7 +14,7 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
+ *   You should have received a copy of the GNU General Public License     * 
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
@@ -41,8 +41,7 @@ void split(std::string const &str, const char delim,
     size_t start;
     size_t end = 0;
  
-    while ((start = str.find_first_not_of(delim, end)) != std::string::npos)
-    {
+    while ((start = str.find_first_not_of(delim, end)) != std::string::npos) {
         end = str.find(delim, start);
         out.push_back(str.substr(start, end - start));
     }
@@ -76,16 +75,16 @@ void SequencerCore::cleanup() {
 }
 
 void SequencerCore::playSequence() {
-  playing=1;
+  playing = 1;
 }
 
 void SequencerCore::stopSequence() {
-  playing=0;
+  playing = 0;
   myPattern->setCurrentStepIndex(0);
 }
 
 void SequencerCore::setPattern(int i) {
-  myPatternNumber=i;
+  myPatternNumber = i;
   myPattern=patterns[i-1];
 }
 
@@ -95,8 +94,8 @@ int SequencerCore::getCurrentPatternIndex() {
 
 stepPattern* SequencerCore::getCurrentPattern() {
   //catch oddball condition - switching from chain to pattern mode after setting all steps to P0 in chain mode
-  if (myPatternNumber==0) {
-    myPatternNumber=1;
+  if (myPatternNumber == 0) {
+    myPatternNumber = 1;
     myPattern=patterns[0];
   }
   return myPattern;
@@ -111,54 +110,53 @@ void SequencerCore::run() {
   
   while(alive) {
     if(playing) {
-      double thisStepTime=getJackTime();
+      double thisStepTime = getJackTime();
       
       //was going to offset multiple notes played at same time by 1ms.. but not
       //sure if necessary.. JACK does odd things from time to time
-      int seq_note_inc=0;
+      int seq_note_inc = 0;
       
-      double stepDelta= ((double(60)/(double)myPattern->getPatternTempo())/(double)4 )*1000; //ms
-      if (thisStepTime >= (last_time+stepDelta)) {
+      double stepDelta = ((double(60)/(double)myPattern->getPatternTempo())/(double)4 )*1000; //ms
+      if (thisStepTime >= (last_time + stepDelta)) {
         for (int i=0;i<12;i++) {
-          stepSequence* mySequence=myPattern->getSequence(i+1);
+          stepSequence* mySequence = myPattern->getSequence(i+1);
           if (! mySequence->getMuted()) {
-            int patternStep=myPattern->getCurrentStepIndex();
+            int patternStep = myPattern->getCurrentStepIndex();
             //play our step
-            step* myStep=mySequence->getStep(patternStep);
-            step* arpStep=mySequence->getArpStep(patternStep);
+            step* myStep = mySequence->getStep(patternStep);
+            step* arpStep = mySequence->getArpStep(patternStep);
             if (myStep->isOn) {
-              if (mySequence->drumSequence==1){
-                stepSequence* myAccents=myPattern->getDrumAccentSequence();
-                step* accentStep=myAccents->getStep(patternStep);
-                int modVelocity=myStep->noteVelocity;
+              if (mySequence->drumSequence == 1) {
+                stepSequence* myAccents = myPattern->getDrumAccentSequence();
+                step* accentStep = myAccents->getStep(patternStep);
+                int modVelocity = myStep->noteVelocity;
                 
                 if (accentStep->isOn) {
                   //implement simple accenting.
-                  modVelocity=modVelocity*2;
+                  modVelocity = modVelocity*2;
                   if (modVelocity > 127) {
                     modVelocity=127;
                   }
                 }
-                queue_message(thisStepTime+seq_note_inc,mySequence->getMidiChannel()-1,144,mySequence->drumNote,modVelocity); //note on
-                queue_message(thisStepTime+(myStep->noteLength*stepDelta),mySequence->getMidiChannel()-1,128,mySequence->drumNote,0); //note off
+                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, mySequence->drumNote, modVelocity); //note on
+                queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, mySequence->drumNote, 0); //note off
               } else {
-                queue_message(thisStepTime+seq_note_inc,mySequence->getMidiChannel()-1,144,myStep->noteNumber,myStep->noteVelocity); //note on
-                queue_message(thisStepTime+(myStep->noteLength*stepDelta),mySequence->getMidiChannel()-1,128,myStep->noteNumber,0); //note off}
+                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, myStep->noteNumber, myStep->noteVelocity); //note on
+                queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, myStep->noteNumber, 0); //note off}
                 //fprintf(stderr,"Note length %d: on / off queued: %d %d\n",myStep->noteLength,thisStepTime,thisStepTime+(myStep->noteLength*stepDelta));
               }
               seq_note_inc+=1;
             }
-            if (arpStep->isOn) {
-              queue_message(thisStepTime+seq_note_inc,mySequence->getMidiChannel()-1,144,arpStep->noteNumber,arpStep->noteVelocity); //note on
-      
-              queue_message(thisStepTime+(myStep->noteLength*stepDelta),mySequence->getMidiChannel()-1,128,arpStep->noteNumber,0); //note off}
+            if (arpStep->isOn) { 
+              queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, arpStep->noteNumber, arpStep->noteVelocity); //note on      
+              queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, arpStep->noteNumber, 0); //note off}
             }
           }  
         }
         //move our pattern pointer along
         myPattern->nextStep();
 
-        last_time=thisStepTime;    
+        last_time = thisStepTime;    
       } else {
         // usleep(5000);
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -168,6 +166,7 @@ void SequencerCore::run() {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
   }
+  disconnectJACK();
 }
 
 stepPattern* SequencerCore::createBlankPattern() {
@@ -199,10 +198,10 @@ stepPattern* SequencerCore::createBlankPattern() {
 void SequencerCore::initSequencer() {
   //if we can't open our default file, construct a minimal empty bank
   for (int i=0;i<16;i++) {
-    patterns[i]=createBlankPattern();
+    patterns[i] = createBlankPattern();
   }
-  myPattern=patterns[0];
-  myPatternNumber=1;
+  myPattern = patterns[0];
+  myPatternNumber = 1;
 
   myPatternChain = new stepPatternChain();
 }
@@ -219,7 +218,7 @@ void SequencerCore::saveBank(char* fileName) {
 
 void SequencerCore::createBank() {
   for (int i=0;i<16;i++) {
-    patterns[i]=createBlankPattern();
+    patterns[i] = createBlankPattern();
   }
 }
 
@@ -337,7 +336,6 @@ void SequencerCore::loadBank(char* fileName) {
       currentStepIndex++;
       //fprintf(stderr,"STEP: %d %d\n",currentStep->isOn,currentStep->noteNumber);
     }
-
   }
   //set patternlength of last pattern.
   if (patternLength && currentPattern) {

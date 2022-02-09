@@ -153,8 +153,8 @@ void stepSequence::clearArp()
 	fprintf(stderr,"Clearing arp\n");
 	arp=0;
 	for (int i=0;i < MAX_STEPS;i++) {
-		step* arpStep=arpArray[i];
-		arpStep->isOn=0;
+		step* arpStep = arpArray[i];
+		arpStep->isOn = 0;
 	}
 }
 
@@ -162,31 +162,31 @@ void stepSequence::arpeggiate() {
 	//TODO: stub method for testing - this should take some arguments for tonality, note length, speed and direction.
 	arp=1;
 	//for now lets just construct an ascending minor arpeggio on 16th notes
-	int baseNote=0;
-	int tonality=0;
+	int baseNote = 0;
+	int tonality = 0;
 	//clear our arpeggio data
 	for (int i=0;i < MAX_STEPS;i++) {
-		step* arpStep=arpArray[i];
-		arpStep->isOn=0;
+		step* arpStep = arpArray[i];
+		arpStep->isOn = 0;
 	}
 
 	//now lets write some notes into our arp buffer.
 	for (int i=0;i < MAX_STEPS;i++) {
-		step* myStep=stepArray[i];
+		step* myStep = stepArray[i];
 		if (myStep->isOn == 1)	{
-			baseNote=myStep->noteNumber;
-			tonality=myStep->noteTonality;
-			arpLength=myStep->noteLength;
-			arpCounter=0;
+			baseNote = myStep->noteNumber;
+			tonality = myStep->noteTonality;
+			arpLength = myStep->noteLength;
+			arpCounter = 0;
 		} else {
-			if (arpLength >0)	{
+			if (arpLength > 0)	{
 				//for now, lets just echo the notes an octave up into our arpArray
-				step* arpStep=arpArray[i];
-				arpStep->noteNumber=baseNote+getNextArpOffset(tonality);
+				step* arpStep = arpArray[i];
+				arpStep->noteNumber=baseNote + getNextArpOffset(tonality);
 				//fprintf(stderr,"setting step %d to note %d\n",i,arpStep->noteNumber);
-				baseNote=arpStep->noteNumber;
-				arpStep->noteLength=1;
-				arpStep->isOn=1;
+				baseNote = arpStep->noteNumber;
+				arpStep->noteLength = 1;
+				arpStep->isOn = 1;
 				arpLength--;
 			}
 		}
@@ -205,12 +205,12 @@ int stepSequence::getNextArpOffset(int tonality) {
 	int majArray[] = {4,3,4,3,-14};
   int minArray[] = {3,4,3,4,-14};
 	
-	if (tonality==1) {
-		patternLength=4;
-		arpOffset=majArray[arpCounter];
+	if (tonality == 1) {
+		patternLength = 4;
+		arpOffset = majArray[arpCounter];
 	} else if (tonality == 2) {
-		patternLength=4;
-		arpOffset=minArray[arpCounter];
+		patternLength = 4;
+		arpOffset = minArray[arpCounter];
 	}
 	
 	arpCounter++;
@@ -226,7 +226,7 @@ stepPattern::stepPattern() {
 	//the stepPattern is our main building block
 	//this is a container for all the sequenced tracks - synth lines, chords and drums.
 	
-	currentStepIndex=0;
+	currentStepIndex = 0;
 	
 	patternSteps=16; //initial default length
 	globalTempo=0; //TODO: implement global tempo locking
@@ -261,14 +261,12 @@ int stepPattern::getPatternTempo() {
 
 void stepPattern::setPatternTempo(int t) {
 	//fprintf(stderr,"stepPattern::setPatternTempo to %d\n",t);
-	patternTempo=t;
+	patternTempo = t;
 }
 
 void stepPattern::setGlobalTempo(int t) {
-	globalTempo=t;
+	globalTempo = t;
 }
-
-
 
 int stepPattern::nextStep() {
 	currentStepIndex++;
@@ -286,7 +284,7 @@ int stepPattern::getCurrentStepIndex() {
 
 void stepPattern::setCurrentStepIndex(int step) {
 	//fprintf(stderr,"stepPattern::setCurrentStepIndex() setting current index to %d from %d\n",step,currentStepIndex);
-	currentStepIndex=step;
+	currentStepIndex = step;
 }
 
 
@@ -296,17 +294,16 @@ int stepPattern::getPatternLength() {
 
 void stepPattern::setPatternLength(int steps) {
 	//fprintf(stderr,"DEBUG: stepPattern::setPatternLength setting pattern length to %d steps\n",steps);
-	patternSteps=steps;
+	patternSteps = steps;
 	//not sure if i need to do this, but probably useful for copying existing notes when
 	//extending pattern length
 	for (int i=0;i<MAX_SEQUENCES;i++) {
-		stepSequence* s=sequences[i];
+		stepSequence* s = sequences[i];
 		if (s)	{
 			s->setSequenceLength(steps);
 		}
 	}
 }
-
 
 int stepPattern::nextFreeId() {
 	//returns 'human' sequence ID - from 1 to 16, 0 for error.
@@ -346,19 +343,19 @@ int stepPattern::addSequence(const std::string type, const std::string name, int
 	int seq_array_index;
 	int nextId;
 	//fprintf(stderr,"DEBUG: stepPattern::addSequence  adding Sequence %s %s %d\n",type,name,drumNote);
-	nextId=nextFreeId();
+	nextId = nextFreeId();
 	if (nextId) {
-		seq_array_index=nextId-1;
-		stepSequence* s=new stepSequence();
+		seq_array_index = nextId-1;
+		stepSequence* s = new stepSequence();
 		s->setSequenceName(name);
 		s->setSequenceType(type);
 		s->setMidiChannel(1);
 		if (drumNote > 0) {
 			s->setMidiChannel(10);
-			s->drumSequence=1;
-			s->drumNote=drumNote;
+			s->drumSequence = 1;
+			s->drumNote = drumNote;
 		}
-		sequences[seq_array_index]=s;
+		sequences[seq_array_index] = s;
 		//fprintf(stderr,"DEBUG: stepPattern::addSequence  assigned to id %d\n",nextId);
 	} else {
 		fprintf(stderr,"ERROR: stepPattern::addSequence No free Sequence ids\n");
@@ -368,19 +365,18 @@ int stepPattern::addSequence(const std::string type, const std::string name, int
 
 void stepPattern::removeSequence(int sequenceId) {
 	//remove sequence with id seq_id
-	int seq_array_index=sequenceId-1;
+	int seq_array_index = sequenceId-1;
 	//fprintf(stderr,"DEBUG: stepPattern::removeSequence  removing Sequence %d\n",sequenceId);
-	stepSequence* s=sequences[seq_array_index];
+	stepSequence* s = sequences[seq_array_index];
 	delete s;
-	sequences[seq_array_index]=NULL;
+	sequences[seq_array_index] = NULL;
 	
-	if (sequenceId==activeSequenceId) {
+	if (sequenceId == activeSequenceId) {
 		//TODO: may want to handle this closer to the GUI so we can update.
-		activeSequenceId=nextAssignedId();
+		activeSequenceId = nextAssignedId();
 		//fprintf(stderr,"DEBUG: stepPattern::removeSequence  active sequence removed. setting active sequence to  %d\n",activeSequenceId);
 	}
 }
-
 
 stepSequence* stepPattern::getSequence(int sequenceId) {
 	unsigned int seq_array_index=sequenceId-1;
@@ -402,9 +398,9 @@ stepSequence* stepPattern::getDrumAccentSequence() {
 }
 
 stepPatternChain::stepPatternChain() {
-	for (int i=0;i < 16;i++) {
-		patternArray[i]=0;
-		partsMuted[i]=0;
+	for (int i = 0;i < 16;i++) {
+		patternArray[i] = 0;
+		partsMuted[i] = 0;
 	}
 	currentPattern=1;
 }
@@ -440,18 +436,18 @@ int stepPatternChain::getNextPattern() {
 	if (currentPattern > 16) {
 		currentPattern=1;
  }
-	if (patternArray[currentPattern-1]==0) {
-		currentPattern=1;
-		fprintf(stderr,"DEBUG: getNextPattern() Looping returning 1st pattern (%d)\n",patternArray[0]);
+	if (patternArray[currentPattern-1] == 0) {
+		currentPattern = 1;
+		fprintf(stderr,"DEBUG: getNextPattern() Looping returning 1st pattern (%d)\n", patternArray[0]);
 		return patternArray[0];
 	} else {
-		fprintf(stderr,"DEBUG: getNextPattern() returning current pattern  - %d\n",currentPattern-1);
+		fprintf(stderr,"DEBUG: getNextPattern() returning current pattern  - %d\n", currentPattern-1);
 		return patternArray[currentPattern-1];
 	}
 }
 
 void stepPatternChain::setPattern(int i, int j) {
-	patternArray[i]=j;
+	patternArray[i] = j;
 }
 
 void stepPatternChain::serialise(FILE* file) {

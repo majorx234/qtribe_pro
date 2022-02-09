@@ -23,6 +23,72 @@
 #ifndef _STEPSEQUENCERWIDGET_HPP_
 #define _STEPSEQUENCERWIDGET_HPP_
 
+#include <QtWidgets>
+
 #include "ui_stepsequencerwidgetbase.h"
+
+#include "sequencerCore.hpp"
+namespace Ui {
+class stepSequencerWidget;
+}
+
+class stepSequencerWidget : public QWidget{
+  Q_OBJECT
+ private:  
+  Ui::stepsequencerwidgetbase *ui;
+ public:
+  explicit stepSequencerWidget(QWidget* parent = 0,
+                               const char* name = 0);
+      //      ,Qt::WFlags fl = 0 );
+  ~stepSequencerWidget();
+  void setBankFile(char* c);
+ private:
+  //qTribe* mySequencer;
+  
+	SequencerCore* mySequencerCore;
+  std::thread mySequencerThread;
+  
+	int selectedStep;
+	int selectedChainStep;
+	
+	int patternStepSong;
+	int stepMode;
+	int patternMode;
+
+	int playing;
+	
+	int delayedPatternChange;
+	
+	int muteMode;
+	int selectedMeasure;
+	QPalette pal;
+	QColor buttonOffColor;
+	QColor buttonOnColor;
+	QColor buttonPlayColor;
+	QColor selectedChainColor;
+	QString bankFile;
+	void setStepButtonColors();
+	void chainClearStepButtonColors();
+	void setSynthPartButtonColors();
+	void setDrumPartButtonColors();
+	void updatePlaybackPosition();
+
+ public slots:
+  void muteParts_toggled(bool);
+  void stepModeGroup_clicked(int);
+  void synthParts_clicked(int);
+  void dataDial_valueChanged(int);
+  void sequence_clicked(int);
+  void drumParts_clicked(int);
+  void play_toggled(bool);
+  void patternModeGroup_clicked(int);
+  void editPositionGroup_clicked(int);
+  void bpm_valueChanged(int);
+  void updateGui();
+  void writeButton_clicked();
+  void loadButton_clicked();
+  void chainGroup_clicked(int);
+  void arpOn_stateChanged(bool);
+};
 
 #endif // _STEPSEQUENCERWIDGET_HPP_
