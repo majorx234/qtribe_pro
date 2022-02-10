@@ -33,8 +33,25 @@ const char* noteNames[]={"C-","C#-","D-","D#-","E-","F-","F#-","G-","G#-","A-","
 
 stepSequencerWidget::stepSequencerWidget(QWidget *parent,
                                          const char *name)
-    : QWidget(parent), ui(new Ui::stepsequencerwidgetbase) {
+    : QWidget(parent)
+    , ui(new Ui::stepsequencerwidgetbase)
+    , bankFile(QString())
+    , playing(0)
+    , selectedStep(0)
+    , selectedChainStep(0)
+    , selectedMeasure(0)
+    , patternStepSong(0)
+    , delayedPatternChange(0)
+    , patternMode(2)
+    , stepMode(0)
+    , buttonOnColor(QColor(200,255,128))
+    , buttonOffColor(QColor(240,240,240))
+    , buttonPlayColor(QColor(255,128,128))
+    , selectedChainColor(QColor(255,192,128))
+    , muteMode(0) {
   ui->setupUi(this);
+  pal = ui->synthPart1->palette();
+  
   mySequencerCore = new SequencerCore();
   mySequencerCore->initSequencer();
 
@@ -69,8 +86,15 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
   }
   setBankFile((char*)homePath.toStdString().c_str());
 
+  // stepModeGroup_clicked(stepMode);
+  // patternModeGroup_clicked(patternMode);
+
+  // setStepButtonColors();
+  // setSynthPartButtonColors();
+  // setDrumPartButtonColors();
+
   // run the sequencer
-  mySequencerThread = std::thread(&SequencerCore::run,mySequencerCore);
+  // mySequencerThread = std::thread(&SequencerCore::run,mySequencerCore);
 }
 
 stepSequencerWidget::~stepSequencerWidget() {
@@ -78,7 +102,7 @@ stepSequencerWidget::~stepSequencerWidget() {
 }
 
 void stepSequencerWidget::setBankFile(char *c) {
-  
+  bankFile=c;
 }
 
 
@@ -116,7 +140,7 @@ void stepSequencerWidget::sequence_clicked(int) {
 void stepSequencerWidget::drumParts_clicked(int) {
   
 }
-void stepSequencerWidget::play_toggled(bool) {
+void stepSequencerWidget::play_toggled(bool b) {
   
 }
 void stepSequencerWidget::patternModeGroup_clicked(int) {
@@ -125,8 +149,9 @@ void stepSequencerWidget::patternModeGroup_clicked(int) {
 void stepSequencerWidget::editPositionGroup_clicked(int) {
   
 }
-void stepSequencerWidget::bpm_valueChanged(int) {
-  
+void stepSequencerWidget::bpm_valueChanged(int bpm) {
+  stepPattern* myPattern = mySequencerCore->getCurrentPattern();
+  myPattern->setPatternTempo(bpm);
 }
 void stepSequencerWidget::updateGui() {
   
