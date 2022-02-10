@@ -42,8 +42,8 @@ set(STEP_SEQUENCER_WIDGET_SOURCES
 set(QTRIBE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/include/qtribe.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/qtribe.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 	)
-
 
 QT5_WRAP_UI(STEP_SEQUENCER_WIDGET_BASE_UISrcs 
             ${CMAKE_CURRENT_SOURCE_DIR}/src/stepsequencerwidgetbase.ui)
@@ -77,7 +77,7 @@ target_link_libraries(stepSequencerWidget
 	stepSequencerCore
 	)
 
-add_library(qtribe
+add_executable(qtribe
 	${QTRIBE_SOURCES}
 	${QTRIBE_MOCrcs}
 	)

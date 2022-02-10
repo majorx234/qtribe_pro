@@ -18,49 +18,38 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ **************************************************************************/
 
-#include <string>
-#include <QtWidgets>
-
+#include <QtWidgets/QApplication>
+#include <signal.h>
+#include <unistd.h>
 #include "qtribe.hpp"
 
-qTribe::qTribe()
-    : main_sequencer_widget(new stepSequencerWidget(this)) {
-  setCentralWidget(main_sequencer_widget);
+void catchUnixSignal(int quitSignal) {
+  auto handler = [](int sig) -> void {
+    printf("quit application. received signal(%d)\n", sig);
+    QCoreApplication::quit();
+  };
+
+  sigset_t blocking_mask;
+  sigemptyset(&blocking_mask);
+
+  sigaddset(&blocking_mask, quitSignal);
+  struct sigaction sa;
+  sa.sa_handler = handler;
+  sa.sa_mask = blocking_mask;
+  sa.sa_flags = 0;
+
+  sigaction(quitSignal, &sa, nullptr);
   
 }
 
-qTribe::~qTribe() {
+int main(int argc, char *argv[]) {
+  QApplication app(argc, argv);
+  catchUnixSignal(SIGINT);
+
+  qTribe main_window;
+  main_window.show();
   
+  return app.exec();
 }
-
-void qTribe::closeEvent(QCloseEvent *event) 
-{
-   QMainWindow::closeEvent(event);
-     if (event->isAccepted())
-        emit closed();
-}
-
-
-void qTribe::resizeEvent(QResizeEvent* event)
-{
-	QMainWindow::resizeEvent(event);
-}
-
-void qTribe::close() {
-  QMainWindow::close();    
-}
-
-void qTribe::open() {
-  
-}
-
-void qTribe::newFile() {
-  
-}
-
-bool qTribe::save() {
-  return false;  
-}
-
