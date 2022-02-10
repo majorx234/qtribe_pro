@@ -39,10 +39,17 @@ set(STEP_SEQUENCER_WIDGET_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/stepSequencerWidget.cpp
 	)
 
+set(QTRIBE_SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/include/qtribe.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/qtribe.cpp
+	)
+
+
 QT5_WRAP_UI(STEP_SEQUENCER_WIDGET_BASE_UISrcs 
             ${CMAKE_CURRENT_SOURCE_DIR}/src/stepsequencerwidgetbase.ui)
 
 QT5_WRAP_CPP(STEP_SEQUENCER_WIDGET_MOCrcs ${STEP_SEQUENCER_WIDGET_SOURCES})					
+QT5_WRAP_CPP(QTRIBE_MOCrcs ${QTRIBE_SOURCES})
 
 add_library(jackIO
 	${JACK_IO_SOURCES})
@@ -50,6 +57,8 @@ add_library(jackIO
 add_library(stepSequence
   ${STEP_SEQUENCE_SOURCES}
 )
+
+target_link_libraries(stepSequence PRIVATE ${JACK_LIBRARIES})
 
 add_library(stepSequencerCore
 	${STEP_SEQUENCER_CORE_SOURCES})
@@ -64,6 +73,17 @@ add_library(stepSequencerWidget
 	${STEP_SEQUENCER_WIDGET_BASE_UISrcs}
 	${STEP_SEQUENCER_WIDGET_MOCrcs}
 	)
-target_link_libraries(stepSequence PRIVATE ${JACK_LIBRARIES})
+target_link_libraries(stepSequencerWidget
+	stepSequencerCore
+	)
+
+add_library(qtribe
+	${QTRIBE_SOURCES}
+	${QTRIBE_MOCrcs}
+	)
+target_link_libraries(qtribe
+	stepSequencerWidget
+  )
 
 qt5_use_modules(stepSequencerWidget Core Gui Widgets)
+qt5_use_modules(qtribe Core Gui Widgets)
