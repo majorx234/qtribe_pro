@@ -12,7 +12,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Jack REQUIRED)
 find_package( Qt5Widgets REQUIRED)
 find_package( Qt5Core REQUIRED)
-
+find_package(Threads REQUIRED)
 
 include_directories(${PROJECT_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -74,6 +74,7 @@ add_library(stepSequencerWidget
 	${STEP_SEQUENCER_WIDGET_MOCrcs}
 	)
 target_link_libraries(stepSequencerWidget
+	Threads::Threads
 	stepSequencerCore
 	)
 

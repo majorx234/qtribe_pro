@@ -28,6 +28,7 @@
 class SequencerCore {
  public:
   void initSequencer();
+  void start();
   void cleanup();
   void setPattern(int i);
   void run();

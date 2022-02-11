@@ -74,6 +74,10 @@ void SequencerCore::cleanup() {
   //  wait();  
 }
 
+void SequencerCore::start() {
+  // TODO:need some syncing mechanism here 
+}
+
 void SequencerCore::playSequence() {
   playing = 1;
 }

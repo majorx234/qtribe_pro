@@ -74,6 +74,7 @@ class stepSequencerWidget : public QWidget{
 	void updatePlaybackPosition();
 
  public slots:
+  void start();
   void muteParts_toggled(bool);
   void stepModeGroup_clicked(int);
   void synthParts_clicked(int);
