@@ -22,8 +22,10 @@
 
 #include <QString>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QPalette>
 #include <qdir.h>
+#include <QButtonGroup>
 
 #include "stepSequencerWidget.hpp"
 
@@ -32,6 +34,19 @@
 #endif
 
 const char* noteNames[]={"C-","C#-","D-","D#-","E-","F-","F#-","G-","G#-","A-","A#-","B-","C0","C#0","D0","D#0","E0","F0","F#0","G0","G#0","A0","A#0","B0","C1","C#1","D1","D#1","E1","F1","F#1","G1","G#1","A1","A#1","B1","C2","C#2","D2","D#2","E2","F2","F#2","G2","G#2","A2","A#2","B2","C3","C#3","D3","D#3","E3","F3","F#3","G3","G#3","A3","A#3","B3","C4","C#4","D4","D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7","D#7","E7","F7","F#7","G7","G#7","A7","A#7","B7","C8","C#8","D8","D#8","E8","F8","F#8","G8","G#8","A8","A#8","B8","C9","C#9","D9","D#9","E9","F9","F#9","G9","G#9","A9","A#9","B9","ERR"};
+
+void assignIdsToBottons(QButtonGroup *buttonGroup, QString regex) {
+  QList<QAbstractButton *> buttons = buttonGroup->buttons();
+  QRegExp re(regex);
+  foreach (QAbstractButton *button, buttons) {
+    QString qbuttonname = button->objectName(); 
+    (void)re.indexIn(qbuttonname); // we know it matches, but we need the captured text
+    const int id = re.cap(1).toInt() - 1;
+    buttonGroup->setId(button, id); // assuming the button is already in the button group
+    std::string button_str = qbuttonname.toStdString();
+    printf("button: %s got id : %d \n",button_str.c_str(),id);
+  }
+}
 
 stepSequencerWidget::stepSequencerWidget(QWidget *parent,
                                          const char *name)
@@ -52,7 +67,7 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
     , selectedChainColor(QColor(255,192,128))
     , muteMode(0) {
   ui->setupUi(this);
-  pal = ui->synthPart1->palette();
+  pal = ui->synthPart01->palette();
   
   mySequencerCore = new SequencerCore();
   mySequencerCore->initSequencer();
@@ -87,13 +102,35 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
     }
   }
   setBankFile((char*)homePath.toStdString().c_str());
+  
+  // set id of Buttons in Buttongroups:
+  assignIdsToBottons(ui->sequenceGroup,QString("step(\\d+)"));
+  assignIdsToBottons(ui->drumParts,QString("drumPartButton(\\d+)"));
+  assignIdsToBottons(ui->synthParts, QString("synthPart(\\d+)"));
+  assignIdsToBottons(ui->playPositionGroup,QString("playPositionButton(\\d+)"));
+  assignIdsToBottons(ui->editPositionGroup,QString("editPositionButton(\\d+)"));
+  
+  // connect signals and slots
+  connect(ui->play, &QToolButton::toggled, this, &stepSequencerWidget::play_toggled );
+  connect(ui->sequenceGroup, &QButtonGroup::idClicked, this, &stepSequencerWidget::sequence_clicked);
+  connect(ui->dataDial,&QDial::valueChanged,this,&stepSequencerWidget::dataDial_valueChanged);
+  connect(ui->stepModeGroup, &QButtonGroup::idClicked, this, &stepSequencerWidget::stepModeGroup_clicked);
+  connect(ui->muteParts, &QCheckBox::toggled,this, &stepSequencerWidget::muteParts_toggled );
+  connect(ui->editPositionGroup,&QButtonGroup::idClicked, this, &stepSequencerWidget::editPositionGroup_clicked);
+  connect(ui->patternModeGroup,&QButtonGroup::idClicked, this, &stepSequencerWidget::patternModeGroup_clicked);
+  connect(ui->drumParts, &QButtonGroup::idClicked, this, &stepSequencerWidget::drumParts_clicked);
+  connect(ui->synthParts, &QButtonGroup::idClicked, this, &stepSequencerWidget::synthParts_clicked);
+  connect(ui->writeButton, &QToolButton::clicked, this, &stepSequencerWidget::writeButton_clicked);
+  connect(ui->bpm, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &stepSequencerWidget::bpm_valueChanged);
+  connect(ui->chainGroup, &QButtonGroup::idClicked, this, &stepSequencerWidget::chainGroup_clicked);
+  connect(ui->arpOn,&QCheckBox::toggled, this, &stepSequencerWidget::arpOn_stateChanged);
 
-  // stepModeGroup_clicked(stepMode);
-  // patternModeGroup_clicked(patternMode);
+  stepModeGroup_clicked(stepMode);
+  patternModeGroup_clicked(patternMode);
 
-  // setStepButtonColors();
-  // setSynthPartButtonColors();
-  // setDrumPartButtonColors();
+  setStepButtonColors();
+  setSynthPartButtonColors();
+  setDrumPartButtonColors();
 
   // run the sequencer
   mySequencerThread = std::thread(&SequencerCore::run,mySequencerCore);
@@ -189,8 +226,7 @@ void stepSequencerWidget::setDrumPartButtonColors() {
   stepSequence* mySequence;
   stepPattern* myPattern=mySequencerCore->getCurrentPattern();
   stepSequence* activeSequence=myPattern->getActiveSequence();
-  for (int i=0;i< 9;i++)
-    {
+  for (int i=0;i< 9;i++) {
     QToolButton* myButton=(QToolButton*) ui->drumParts->button(i);
     //offset for 0-base and synthParts
     mySequence=myPattern->getSequence(i+5);
@@ -315,22 +351,23 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
     ui->sequenceGroup->setExclusive(false);
     ui->dataDisplay->setText("qTribe");
     //now we need to go through our steps and set them on or off depending on our underlying step model.
-    QToolButton* myButton;
+    QAbstractButton* myButton;
     step* myStep;
     stepPattern* myPattern = mySequencerCore->getCurrentPattern();
-    stepSequence* mySequence=myPattern->getActiveSequence();
+    stepSequence* mySequence = myPattern->getActiveSequence();
     for (int i=0;i< 16;i++) {
-      myButton=(QToolButton*) ui->sequenceGroup->button(i);
+      //myButton = (QToolButton*) ui->sequenceGroup->button(i);
+      myButton = ui->sequenceGroup->button(i);
       //fprintf(stderr,"BUTTON: %s\n",myButton->className());
-      myStep=mySequence->getStep(i+(selectedMeasure*16));
+      myStep = mySequence->getStep(i+(selectedMeasure * 16));
       if (myStep->isOn) {
-        myButton->setChecked(false);
+        myButton->setChecked(true);
         pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
-        myButton ->setPalette( pal ); 
+        myButton->setPalette( pal ); 
       } else {
         myButton->setChecked(false);
         pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
-        myButton ->setPalette( pal );
+        myButton->setPalette( pal );
       }
     }
   }
@@ -352,7 +389,7 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
     stepSequence* mySequence=myPattern->getActiveSequence();
   
     for (int i=0;i< 16;i++) {
-      QToolButton* myButton=(QToolButton*) ui->sequenceGroup->button(i);
+      QAbstractButton* myButton = ui->sequenceGroup->button(i);
       // old: myButton->setOn(true);
       myButton->setChecked(true);
     }
@@ -703,12 +740,12 @@ void stepSequencerWidget::loadButton_clicked() {
   setStepButtonColors();  
 }
 void stepSequencerWidget::chainGroup_clicked(int i) {
-    fprintf(stderr,"DEBUG:chainGroup_clicked %d\n",i);
+  fprintf(stderr,"DEBUG:chainGroup_clicked %d\n",i);
   stepPatternChain* myPatternChain = mySequencerCore->getPatternChain();
-  patternStepSong=2;
+  patternStepSong = 2;
   mySequencerCore->setPattern(myPatternChain->getCurrentPattern());
   ui->dataDisplay->setText(QString("P%1").arg(mySequencerCore->getCurrentPatternIndex()));
-  delayedPatternChange=0;
+  delayedPatternChange = 0;
   setSynthPartButtonColors();
   setDrumPartButtonColors();
   chainClearStepButtonColors();

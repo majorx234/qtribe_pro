@@ -206,7 +206,7 @@
            </property>
            <layout class="QHBoxLayout">
             <item>
-             <widget class="QGroupBox" name="patternModeGroup">
+             <widget class="QGroupBox" name="patternModeGroupBox">
               <property name="title">
                <string>Pattern</string>
               </property>
@@ -222,6 +222,9 @@
                  <property name="shortcut">
                   <string>Alt+A</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">patternModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -232,6 +235,9 @@
                  <property name="shortcut">
                   <string/>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">patternModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -245,13 +251,16 @@
                  <property name="checked">
                   <bool>true</bool>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">patternModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="stepModeGroup">
+             <widget class="QGroupBox" name="stepModeGroupBox">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -273,6 +282,9 @@
                  <property name="checked">
                   <bool>true</bool>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">stepModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -283,6 +295,9 @@
                  <property name="shortcut">
                   <string>Alt+N</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">stepModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -290,6 +305,9 @@
                  <property name="text">
                   <string>length</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">stepModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -297,6 +315,9 @@
                  <property name="text">
                   <string>velocit&amp;y</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">stepModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -304,13 +325,16 @@
                  <property name="text">
                   <string>tonality</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">stepModeGroup</string>
+                 </attribute>
                 </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="chainGroup">
+             <widget class="QGroupBox" name="chainGroupBox">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -326,6 +350,9 @@
                  <property name="text">
                   <string>chain</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">chainGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -333,6 +360,9 @@
                  <property name="text">
                   <string>chain loop</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">chainGroup</string>
+                 </attribute>
                 </widget>
                </item>
               </layout>
@@ -444,7 +474,7 @@
         <property name="title">
          <string>synthParts</string>
         </property>
-        <widget class="QToolButton" name="synthPart1">
+        <widget class="QToolButton" name="synthPart01">
          <property name="geometry">
           <rect>
            <x>11</x>
@@ -478,7 +508,7 @@
           <string notr="true">synthParts</string>
          </attribute>
         </widget>
-        <widget class="QToolButton" name="synthPart2">
+        <widget class="QToolButton" name="synthPart02">
          <property name="geometry">
           <rect>
            <x>57</x>
@@ -503,7 +533,7 @@
           <string notr="true">synthParts</string>
          </attribute>
         </widget>
-        <widget class="QToolButton" name="synthPart3">
+        <widget class="QToolButton" name="synthPart03">
          <property name="geometry">
           <rect>
            <x>103</x>
@@ -528,7 +558,7 @@
           <string notr="true">synthParts</string>
          </attribute>
         </widget>
-        <widget class="QToolButton" name="synthPart4">
+        <widget class="QToolButton" name="synthPart04">
          <property name="geometry">
           <rect>
            <x>149</x>
@@ -562,7 +592,7 @@
         </property>
         <layout class="QHBoxLayout">
          <item>
-          <widget class="QToolButton" name="toolButton59">
+          <widget class="QToolButton" name="drumPartButton01">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -587,7 +617,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_2">
+          <widget class="QToolButton" name="drumPartButton02">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -606,7 +636,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3">
+          <widget class="QToolButton" name="drumPartButton03">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -625,7 +655,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3_2">
+          <widget class="QToolButton" name="drumPartButton04">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -644,7 +674,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3_3">
+          <widget class="QToolButton" name="drumPartButton05">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -663,7 +693,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3_4">
+          <widget class="QToolButton" name="drumPartButton06">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -682,7 +712,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3_5">
+          <widget class="QToolButton" name="drumPartButton07">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -701,7 +731,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3_6">
+          <widget class="QToolButton" name="drumPartButton08">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -720,7 +750,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton59_3_7">
+          <widget class="QToolButton" name="drumPartButton09">
            <property name="maximumSize">
             <size>
              <width>40</width>
@@ -817,7 +847,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QRadioButton" name="radioButton5_2">
+                <widget class="QRadioButton" name="playPositionButton01">
                  <property name="text">
                   <string>&amp;1</string>
                  </property>
@@ -833,7 +863,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton6_2">
+                <widget class="QRadioButton" name="playPositionButton02">
                  <property name="text">
                   <string>&amp;2</string>
                  </property>
@@ -846,7 +876,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton7_2">
+                <widget class="QRadioButton" name="playPositionButton03">
                  <property name="text">
                   <string>&amp;3</string>
                  </property>
@@ -859,7 +889,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton8_2">
+                <widget class="QRadioButton" name="playPositionButton04">
                  <property name="text">
                   <string>&amp;4</string>
                  </property>
@@ -872,7 +902,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton9_2">
+                <widget class="QRadioButton" name="playPositionButton05">
                  <property name="text">
                   <string>&amp;5</string>
                  </property>
@@ -885,7 +915,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton10_2">
+                <widget class="QRadioButton" name="playPositionButton06">
                  <property name="text">
                   <string>&amp;6</string>
                  </property>
@@ -898,7 +928,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton11_2">
+                <widget class="QRadioButton" name="playPositionButton07">
                  <property name="text">
                   <string>&amp;7</string>
                  </property>
@@ -911,7 +941,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton12_2">
+                <widget class="QRadioButton" name="playPositionButton08">
                  <property name="text">
                   <string>&amp;8</string>
                  </property>
@@ -948,7 +978,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QRadioButton" name="radioButton5">
+                <widget class="QRadioButton" name="editPositionButton01">
                  <property name="text">
                   <string>&amp;1</string>
                  </property>
@@ -964,7 +994,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton6">
+                <widget class="QRadioButton" name="editPositionButton02">
                  <property name="text">
                   <string>&amp;2</string>
                  </property>
@@ -977,7 +1007,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton7">
+                <widget class="QRadioButton" name="editPositionButton03">
                  <property name="text">
                   <string>&amp;3</string>
                  </property>
@@ -990,7 +1020,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton8">
+                <widget class="QRadioButton" name="editPositionButton04">
                  <property name="text">
                   <string>&amp;4</string>
                  </property>
@@ -1003,7 +1033,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton9">
+                <widget class="QRadioButton" name="editPositionButton05">
                  <property name="text">
                   <string>&amp;5</string>
                  </property>
@@ -1016,7 +1046,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton10">
+                <widget class="QRadioButton" name="editPositionButton06">
                  <property name="text">
                   <string>&amp;6</string>
                  </property>
@@ -1029,7 +1059,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton11">
+                <widget class="QRadioButton" name="editPositionButton07">
                  <property name="text">
                   <string>&amp;7</string>
                  </property>
@@ -1042,7 +1072,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton12">
+                <widget class="QRadioButton" name="editPositionButton08">
                  <property name="text">
                   <string>&amp;8</string>
                  </property>
@@ -1389,10 +1419,13 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="synthParts"/>
-  <buttongroup name="drumParts"/>
-  <buttongroup name="sequenceGroup"/>
-  <buttongroup name="playPositionGroup"/>
   <buttongroup name="editPositionGroup"/>
+  <buttongroup name="chainGroup"/>
+  <buttongroup name="sequenceGroup"/>
+  <buttongroup name="synthParts"/>
+  <buttongroup name="patternModeGroup"/>
+  <buttongroup name="stepModeGroup"/>
+  <buttongroup name="drumParts"/>
+  <buttongroup name="playPositionGroup"/>
  </buttongroups>
 </ui>
