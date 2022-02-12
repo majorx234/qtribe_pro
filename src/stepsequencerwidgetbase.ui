@@ -1070,7 +1070,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="sequenceGroup">
+       <widget class="QGroupBox" name="sequenceGroupBox">
         <property name="title">
          <string>sequence</string>
         </property>
@@ -1089,6 +1089,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1099,6 +1102,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1109,6 +1115,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1119,6 +1128,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1129,6 +1141,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1139,6 +1154,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1149,6 +1167,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1159,6 +1180,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1169,6 +1193,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1179,6 +1206,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1189,6 +1219,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1199,6 +1232,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1209,6 +1245,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1219,6 +1258,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1229,6 +1271,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -1239,6 +1284,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">sequenceGroup</string>
+           </attribute>
           </widget>
          </item>
         </layout>
@@ -1253,4 +1301,7 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="sequenceGroup"/>
+ </buttongroups>
 </ui>

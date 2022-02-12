@@ -164,7 +164,7 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
     selectedStep=step_array_index+1;
     if (stepMode==0) { //note on/off
         //QPushButton* myButton
-        QWidget*  myButton  = ui->sequenceGroup->find(step_array_index);
+         QAbstractButton* myButton  = ui->sequenceGroup->button(step_array_index);
       if (! myStep->isOn) {
         myStep->isOn=1;  
         pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
@@ -180,6 +180,7 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
     if (stepMode==1) { //note number
       //ensure this button is on, even if we clicked on it when it was on.
       //TODO: ui->sequenceGroup->setButton(step_array_index);
+      ui->sequenceGroup->button(step_array_index)->setDown(true);
       ui->dataDisplay->setText(QString("%1").arg(noteNames[myStep->noteNumber]));
       //fprintf(stderr,"STEP DISPLAY INFO: %d",myStep->noteNumber);
     }
@@ -187,12 +188,14 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
     if (stepMode==2) { //length
       //ensure this button is on, even if we clicked on it when it was on.
       //TODO: ui->sequenceGroup->setButton(step_array_index);
+      ui->sequenceGroup->button(step_array_index)->setDown(true);
       ui->dataDisplay->setText(QString("%1").arg(myStep->noteLength));
     }
   
     if (stepMode==3) { //note velocity 
       //ensure this button is on, even if we clicked on it when it was on.
       //TODO: ui->sequenceGroup->setButton(step_array_index);
+      ui->sequenceGroup->button(step_array_index)->setDown(true);
       ui->dataDisplay->setText(QString("%1").arg(myStep->noteVelocity));
     }
   }  
