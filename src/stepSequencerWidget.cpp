@@ -136,27 +136,117 @@ void stepSequencerWidget::stepModeGroup_clicked(int) {
 void stepSequencerWidget::synthParts_clicked(int) {
   
 }
-void stepSequencerWidget::dataDial_valueChanged(int) {
+void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
+  // here we need to update our backed data to reflect our new selection.
+  if (patternStepSong == 0) {  
+    if (patternMode == 0) {
+      int modDataVal=(dataVal+9)/9;
+      ui->dataDisplay->setText(QString("P%1").arg(modDataVal));
+      if (playing) {
+        //queue switching of pattern at next step 0.
+        delayedPatternChange=modDataVal;
+        ui->dataDisplay->setText(QString(">P%1").arg(modDataVal));
+      }
+      else {
+        mySequencerCore->setPattern(modDataVal);
+        stepModeGroup_clicked(stepMode);
+        patternModeGroup_clicked(patternMode);
+        setSynthPartButtonColors();
+        setDrumPartButtonColors();
+        setStepButtonColors();
+      }
+    }
+
+    if (patternMode==1) {
+      
+      int modDataVal=(dataVal+9)/9;
+      //fprintf(stderr,"Setting MIDI Channel %d orig %d\n",modDataVal,dataVal);
+      stepPattern* myPattern = mySequencerCore->getCurrentPattern();
+      stepSequence* mySequence=myPattern->getActiveSequence();
+      if (mySequence->getMidiChannel() != modDataVal) {
+        mySequence->setMidiChannel(modDataVal);
+      }
+      ui->dataDisplay->setText(QString("%1").arg(modDataVal));
+    }
+
+    if (patternMode==2)  {
+      int modDataVal=(dataVal+18)/17;
+      stepPattern* myPattern = mySequencerCore->getCurrentPattern();
+      if (myPattern->getPatternLength() != modDataVal) {
+        myPattern->setPatternLength(modDataVal*16);
+      }
+      ui->dataDisplay->setText(QString("%1").arg(modDataVal));
+    }
+  }
   
-}
-void stepSequencerWidget::sequence_clicked(int step_array_index) {
-  //depending on what mode we are in we want different behaviour here.
-  //for now lets just implement the step editing facility.
-  if (patternStepSong==2)
-    {
+  //do we have a note selected in note mode? 
+  if (patternStepSong == 1) {
+    stepPattern* myPattern = mySequencerCore->getCurrentPattern();
+    stepSequence* mySequence=myPattern->getActiveSequence();
+    
+    if (mySequence->drumSequence==1 && stepMode==1) {
+      mySequence->drumNote=dataVal;
+      ui->dataDisplay->setText(QString("%1").arg(noteNames[dataVal]));
+      //fprintf(stderr,"We're supposedly a drum sequence\n"  );
+    } else {
+      if (selectedStep && stepMode==1) {
+        int step_array_index=selectedStep-1;
+        step* myStep;
+        myStep = mySequence->getStep(step_array_index+(selectedMeasure*16));  
+        myStep->noteNumber=dataVal;
+        ui->dataDisplay->setText(QString("%1").arg(noteNames[dataVal]));
+        //fprintf(stderr,"STEP INFO: On: %d Note Number %d Length %d Vel %d\n",myStep->isOn,myStep->noteNumber,myStep->noteLength,myStep->noteVelocity);
+      }
+      
+      if (selectedStep && stepMode==3) {
+        int step_array_index=selectedStep-1;
+        step* myStep;
+        myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+        myStep->noteVelocity=dataVal;
+        ui->dataDisplay->setText(QString("%1").arg(dataVal));
+      }
+      if (selectedStep && stepMode==4) {
+        int step_array_index=selectedStep-1;
+        step* myStep;
+        myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+        myStep->noteTonality=dataVal;
+        ui->dataDisplay->setText(QString("%1").arg(dataVal));
+      }
+    }
+    if (selectedStep && stepMode==2) {
+      int modDataVal=dataVal; //max 128 steps note length
+      int step_array_index=selectedStep-1;
+      step* myStep;
+      myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+      myStep->noteLength=modDataVal;
+      ui->dataDisplay->setText(QString("%1").arg(modDataVal));
+    }  
+  }
+  if (patternStepSong==2) {
+    //chain mode
+    //if we have a selected step, assign the selected pattern to it.
+    
     stepPatternChain* myPatternChain=mySequencerCore->getPatternChain();
+    int modDataVal=(dataVal+8)/9;
+    ui->dataDisplay->setText(QString("P%1").arg(modDataVal));
+    myPatternChain->setPattern(selectedChainStep, modDataVal) ;
+  }
+}
+
+void stepSequencerWidget::sequence_clicked(int step_array_index) {
+  // depending on what mode we are in we want different behaviour here.
+  // for now lets just implement the step editing facility.
+  if (patternStepSong==2) {
+    stepPatternChain* myPatternChain = mySequencerCore->getPatternChain();
     //handle chain-mode functions
     selectedChainStep=step_array_index;
     chainClearStepButtonColors();
     ui->dataDisplay->setText(QString("P%1").arg(myPatternChain->getPatternIndex(step_array_index)));
-
-    }
-  else
-    {
-    patternStepSong=1;
+  } else {
+    patternStepSong = 1;
     step* myStep;
-    stepPattern* myPattern=mySequencerCore->getCurrentPattern();
-    stepSequence* mySequence=myPattern->getActiveSequence();
+    stepPattern* myPattern = mySequencerCore->getCurrentPattern();
+    stepSequence* mySequence = myPattern->getActiveSequence();
     myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
 
     ui->dataDisplay->setText(QString("%1").arg("qTribe"));
