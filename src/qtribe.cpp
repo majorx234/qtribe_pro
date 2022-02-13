@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <string>
 #include <QtWidgets>
+#include <string>
 
 #include "qtribe.hpp"
 
@@ -35,16 +35,14 @@ qTribe::~qTribe() {
   
 }
 
-void qTribe::closeEvent(QCloseEvent *event) 
-{
+void qTribe::closeEvent(QCloseEvent *event) {
    QMainWindow::closeEvent(event);
      if (event->isAccepted())
         emit closed();
 }
 
 
-void qTribe::resizeEvent(QResizeEvent* event)
-{
+void qTribe::resizeEvent(QResizeEvent* event) {
 	QMainWindow::resizeEvent(event);
 }
 

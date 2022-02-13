@@ -47,7 +47,7 @@ step::~step() {
 	//fprintf(stderr,"DEBUG: step::~step() - Destroying step\n");
 }
 
-void step::serialise(FILE* file)	{
+void step::serialise(FILE* file) {
 	fprintf(file,"step:%d|%d|%d|%d|%d\n",isOn,noteNumber,noteLength,noteVelocity,noteTonality);
 }
 
@@ -148,8 +148,7 @@ int stepSequence::isArp() {
 	return arp;
 }
 
-void stepSequence::clearArp()
-{
+void stepSequence::clearArp() {
 	fprintf(stderr,"Clearing arp\n");
 	arp=0;
 	for (int i=0;i < MAX_STEPS;i++) {
@@ -173,13 +172,13 @@ void stepSequence::arpeggiate() {
 	//now lets write some notes into our arp buffer.
 	for (int i=0;i < MAX_STEPS;i++) {
 		step* myStep = stepArray[i];
-		if (myStep->isOn == 1)	{
+		if (myStep->isOn == 1) {
 			baseNote = myStep->noteNumber;
 			tonality = myStep->noteTonality;
 			arpLength = myStep->noteLength;
 			arpCounter = 0;
 		} else {
-			if (arpLength > 0)	{
+			if (arpLength > 0) {
 				//for now, lets just echo the notes an octave up into our arpArray
 				step* arpStep = arpArray[i];
 				arpStep->noteNumber=baseNote + getNextArpOffset(tonality);
@@ -299,7 +298,7 @@ void stepPattern::setPatternLength(int steps) {
 	//extending pattern length
 	for (int i=0;i<MAX_SEQUENCES;i++) {
 		stepSequence* s = sequences[i];
-		if (s)	{
+		if (s) {
 			s->setSequenceLength(steps);
 		}
 	}
@@ -317,7 +316,7 @@ int stepPattern::nextFreeId() {
 
 int stepPattern::nextAssignedId() {
 	for (int i=0;i < MAX_SEQUENCES;i++) {
-		if ( sequences[i])	{
+		if ( sequences[i]) {
 			return i+1;
 		}
 	}
@@ -381,7 +380,7 @@ void stepPattern::removeSequence(int sequenceId) {
 stepSequence* stepPattern::getSequence(int sequenceId) {
 	unsigned int seq_array_index=sequenceId-1;
 	//fprintf(stderr,"DEBUG: stepPattern::getSequence  getting Sequence %d\n",sequenceId);
-	if (sequences[seq_array_index] != NULL && sequenceId <= MAX_SEQUENCES)	{
+	if (sequences[seq_array_index] != NULL && sequenceId <= MAX_SEQUENCES) {
     return sequences[seq_array_index];
   } else {
 		//fprintf(stderr,"ERROR: stepPattern::getSequence  INVALID REQUEST FOR sequenceId %d\n",sequenceId);

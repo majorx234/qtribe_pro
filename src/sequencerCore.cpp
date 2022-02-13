@@ -31,10 +31,6 @@
 #include <chrono>
 
 #include "jackIO.hpp"
-
-#include <iostream>
-#include <string>
-#include <vector>
  
 void split(std::string const &str, const char delim,
             std::vector<std::string> &out) {
@@ -70,7 +66,7 @@ SequencerCore::~SequencerCore() {
 void SequencerCore::cleanup() {  
   playing=0;
   alive=0;
-  // what for is this wait?
+  // TODO: what for is this wait?
   //  wait();  
 }
 
@@ -110,8 +106,7 @@ stepPatternChain* SequencerCore::getPatternChain() {
 }
 
 void SequencerCore::run() {
-  double last_time=0;
-  
+  double last_time = 0;
   while(alive) {
     if(playing) {
       double thisStepTime = getJackTime();
@@ -228,7 +223,7 @@ void SequencerCore::createBank() {
 
 void SequencerCore::setActiveSequence(int seq) {
   for (int i=0;i < 16;i++) {
-    stepPattern* p=patterns[i];
+    stepPattern* p = patterns[i];
     if (p != NULL) {
       fprintf(stderr,"Setting pattern %d active seq to %d\n",i,seq);
       p->setActiveSequence(seq);
@@ -244,7 +239,7 @@ void SequencerCore::loadBank(char* fileName) {
   //trash all our patterns in memory
   for (int i=0;i<16;i++) {
     delete patterns[i];  
-    patterns[i]=nullptr;
+    patterns[i] = nullptr;
   }
   myPattern=NULL;
   stepPatternChain* currentPatternChain=nullptr;
@@ -262,8 +257,7 @@ void SequencerCore::loadBank(char* fileName) {
     const char delim = ':';
 
     split(line, delim, parts);
-    if (parts[0]=="patternchain")
-      {
+    if (parts[0]=="patternchain") {
       fprintf(stderr,"DEBUG: loading patternchain\n");
       currentPatternChain=new stepPatternChain();
       std::vector<std::string> data;

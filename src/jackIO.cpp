@@ -46,9 +46,8 @@ int midiChannel=0;
 //default buffersize
 int bufferSize=1024*sizeof(struct midiMessage);
 
-double nframes_to_ms(jack_nframes_t nframes)
-{
-  return (nframes * 1000.0) / (double)sampleRate;
+double nframes_to_ms(jack_nframes_t nframes) {
+  return (nframes * 1000.0) / static_cast<double>(sampleRate);
 }
 
 //-----------BEGIN MIDI functions - constructing and sending MIDI events-----------------------------------
@@ -279,7 +278,7 @@ void process_midi_output(jack_nframes_t nframes) {
     /* If computed time is too much into the future, we'll need to send it later. 
     We do this by appending events to the end of the ringbuffer*/
     
-    if (t >= (int)nframes) {
+    if (t >= static_cast<int>(nframes)) {
       jack_ringbuffer_read_advance(jackOutputBuffer, sizeof(ev));
       if (! first_message_in_buffer) {
         //we need to watch for events we have seen before or we will loop infintely.
@@ -325,7 +324,7 @@ int jack_processCallback (jack_nframes_t nframes, void* arg) {
 }
 
 int jack_setSampleRate (jack_nframes_t nframes, void *arg) {
-  fprintf (stderr,"JACK: the sample rate is now %lu/sec\n", (long)nframes);
+  fprintf (stderr,"JACK: the sample rate is now %lu/sec\n", static_cast<int64>(nframes));
     sampleRate=nframes;
     return 0;
 }
@@ -352,8 +351,7 @@ int initJACK() {
   jackClientObject=jack_client_open(appName,clientOptions,NULL);
   
   //jack_client_open returns 0 on failure
-  if (jackClientObject)
-    {
+  if (jackClientObject) {
     //create our ringbuffers
     jackOutputBuffer = jack_ringbuffer_create(bufferSize);
     
@@ -372,7 +370,7 @@ int initJACK() {
     sampleRate=jack_get_sample_rate (jackClientObject);
     
     //Notify user of sample rate
-    fprintf (stderr,"JACK: engine sample rate: %lu\n",(long)sampleRate);
+    fprintf (stderr,"JACK: engine sample rate: %lu\n",static_cast<int64>(sampleRate));
     
     //Attempt to register a MIDI port for output
     jackOut=jack_port_register(jackClientObject,"qTribe_out",JACK_DEFAULT_MIDI_TYPE,JackPortIsOutput,bufferSize);

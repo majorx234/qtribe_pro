@@ -40,8 +40,7 @@ void catchUnixSignal(int quitSignal) {
   sa.sa_mask = blocking_mask;
   sa.sa_flags = 0;
 
-  sigaction(quitSignal, &sa, nullptr);
-  
+  sigaction(quitSignal, &sa, nullptr);  
 }
 
 int main(int argc, char *argv[]) {
