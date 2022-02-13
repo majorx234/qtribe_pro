@@ -324,7 +324,7 @@ int jack_processCallback (jack_nframes_t nframes, void* arg) {
 }
 
 int jack_setSampleRate (jack_nframes_t nframes, void *arg) {
-  fprintf (stderr,"JACK: the sample rate is now %lu/sec\n", static_cast<int64>(nframes));
+  fprintf (stderr,"JACK: the sample rate is now %lu/sec\n", static_cast<int64_t>(nframes));
     sampleRate=nframes;
     return 0;
 }
@@ -370,7 +370,7 @@ int initJACK() {
     sampleRate=jack_get_sample_rate (jackClientObject);
     
     //Notify user of sample rate
-    fprintf (stderr,"JACK: engine sample rate: %lu\n",static_cast<int64>(sampleRate));
+    fprintf (stderr,"JACK: engine sample rate: %lu\n",static_cast<int64_t>(sampleRate));
     
     //Attempt to register a MIDI port for output
     jackOut=jack_port_register(jackClientObject,"qTribe_out",JACK_DEFAULT_MIDI_TYPE,JackPortIsOutput,bufferSize);
