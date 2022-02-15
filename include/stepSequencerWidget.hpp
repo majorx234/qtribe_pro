@@ -72,6 +72,7 @@ class stepSequencerWidget : public QWidget{
 	void setSynthPartButtonColors();
 	void setDrumPartButtonColors();
 	void updatePlaybackPosition();
+  int get_dataDial_value();                             
 
  public slots:
   void start();

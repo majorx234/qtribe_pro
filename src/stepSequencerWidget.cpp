@@ -376,9 +376,10 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
     stepPatternChain* myPatternChain = mySequencerCore->getPatternChain();
     // TODO: figure out where dataVal usally come from
     // looks like it is used to set value here <- come from dial
-    // int modDataVal=(dataVal + 8)/9;
-    // ui->dataDisplay->setText(QString("P%1").arg(modDataVal));
-    // myPatternChain->setPattern(selectedChainStep, modDataVal) ;
+    int dataVal = get_dataDial_value();
+    int modDataVal=(dataVal + 8)/9;
+    ui->dataDisplay->setText(QString("P%1").arg(modDataVal));
+    myPatternChain->setPattern(selectedChainStep, modDataVal) ;
   } else if (stepMode==1 || stepMode==2 || stepMode==3 || stepMode==4) {
     ui->sequenceGroup->setExclusive(true);
     ui->dataDisplay->setText("---");
@@ -455,6 +456,10 @@ void stepSequencerWidget::synthParts_clicked(int sequencer_part_index) {
   setSynthPartButtonColors();
   setDrumPartButtonColors();
   setStepButtonColors();
+}
+
+int stepSequencerWidget::get_dataDial_value() {
+  return ui->dataDial->value(); 
 }
 
 void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
