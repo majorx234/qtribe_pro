@@ -23,6 +23,7 @@
 #ifndef _SEQUENCERCORE_HPP_
 #define _SEQUENCERCORE_
 
+#include <functional>
 #include "stepSequence.hpp"
 
 class SequencerCore {
@@ -46,7 +47,7 @@ class SequencerCore {
 
   void setActiveSequence(int seq);
 
-  SequencerCore();
+  SequencerCore(std::function<void ()>);
   ~SequencerCore();
 
  private:
@@ -60,6 +61,7 @@ class SequencerCore {
   int alive;
   int sequenceId;
   int backendInitialised;
+  std::function<void ()> stepCallback;
 };
 
 #endif //  _SEQUENCERCORE_HPP_

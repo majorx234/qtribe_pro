@@ -29,6 +29,7 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <functional>
 
 #include "jackIO.hpp"
  
@@ -43,12 +44,13 @@ void split(std::string const &str, const char delim,
     }
 }
 
-SequencerCore::SequencerCore()
+SequencerCore::SequencerCore(std::function<void ()> step_callback)
     : backendInitialised(0)
     , playing(0)
     , alive(1)
     , sequenceId(0)
-    , myPatternNumber(1) {
+    , myPatternNumber(1)
+    , stepCallback(step_callback) {
   //constructor
   backendInitialised = initJACK();
   
@@ -109,6 +111,7 @@ void SequencerCore::run() {
   double last_time = 0;
   while(alive) {
     if(playing) {
+      stepCallback();
       double thisStepTime = getJackTime();
       
       //was going to offset multiple notes played at same time by 1ms.. but not
@@ -150,11 +153,11 @@ void SequencerCore::run() {
               queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, arpStep->noteNumber, arpStep->noteVelocity); //note on      
               queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, arpStep->noteNumber, 0); //note off}
             }
-          }  
+          }
         }
+        //stepCallback();
         //move our pattern pointer along
         myPattern->nextStep();
-
         last_time = thisStepTime;    
       } else {
         // usleep(5000);

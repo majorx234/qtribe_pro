@@ -315,8 +315,6 @@ void process_midi_output(jack_nframes_t nframes) {
   }
 }
 
-
-
 int jack_processCallback (jack_nframes_t nframes, void* arg) {
   process_midi_output(nframes);
   process_midi_input(nframes);         
