@@ -269,7 +269,7 @@ void stepPattern::setGlobalTempo(int t) {
 int stepPattern::nextStep() {
   currentStepIndex++;
   if (currentStepIndex > patternSteps) {
-    currentStepIndex = 0;
+    currentStepIndex = 1;
   }
   //fprintf(stderr,"stepPattern::nextStep() current step index is %d\n",currentStepIndex);
   return currentStepIndex;

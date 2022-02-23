@@ -123,37 +123,39 @@ void SequencerCore::run() {
         for (int i=0;i<12;i++) {
           stepSequence* mySequence = myPattern->getSequence(i+1);
           if (! mySequence->getMuted()) {
-            int patternStep = myPattern->getCurrentStepIndex();
+            int patternStep = myPattern->getCurrentStepIndex()-1;
             //play our step
-            step* myStep = mySequence->getStep(patternStep);
-            step* arpStep = mySequence->getArpStep(patternStep);
-            if (myStep->isOn) {
-              if (mySequence->drumSequence == 1) {
-                stepSequence* myAccents = myPattern->getDrumAccentSequence();
-                step* accentStep = myAccents->getStep(patternStep);
-                int modVelocity = myStep->noteVelocity;
+            if(patternStep != -1){
+              step* myStep = mySequence->getStep(patternStep);
+              step* arpStep = mySequence->getArpStep(patternStep);
+              if (myStep->isOn) {
+                if (mySequence->drumSequence == 1) {
+                  stepSequence* myAccents = myPattern->getDrumAccentSequence();
+                  step* accentStep = myAccents->getStep(patternStep);
+                  int modVelocity = myStep->noteVelocity;
                 
-                if (accentStep->isOn) {
-                  //implement simple accenting.
-                  modVelocity = modVelocity*2;
-                  if (modVelocity > 127) {
-                    modVelocity=127;
+                  if (accentStep->isOn) {
+                    //implement simple accenting.
+                    modVelocity = modVelocity*2;
+                    if (modVelocity > 127) {
+                      modVelocity=127;
+                    }
                   }
+                  queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, mySequence->drumNote, modVelocity); //note on
+                  queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, mySequence->drumNote, 0); //note off
+                } else {
+                  queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, myStep->noteNumber, myStep->noteVelocity); //note on
+                  queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, myStep->noteNumber, 0); //note off}
+                  //fprintf(stderr,"Note length %d: on / off queued: %d %d\n",myStep->noteLength,thisStepTime,thisStepTime+(myStep->noteLength*stepDelta));
                 }
-                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, mySequence->drumNote, modVelocity); //note on
-                queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, mySequence->drumNote, 0); //note off
-              } else {
-                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, myStep->noteNumber, myStep->noteVelocity); //note on
-                queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, myStep->noteNumber, 0); //note off}
-                //fprintf(stderr,"Note length %d: on / off queued: %d %d\n",myStep->noteLength,thisStepTime,thisStepTime+(myStep->noteLength*stepDelta));
+                seq_note_inc+=1;
               }
-              seq_note_inc+=1;
+              if (arpStep->isOn) { 
+                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, arpStep->noteNumber, arpStep->noteVelocity); //note on      
+                queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, arpStep->noteNumber, 0); //note off}
+              }
             }
-            if (arpStep->isOn) { 
-              queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, arpStep->noteNumber, arpStep->noteVelocity); //note on      
-              queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, arpStep->noteNumber, 0); //note off}
-            }
-          }
+          }  
         }
         //stepCallback();
         //move our pattern pointer along

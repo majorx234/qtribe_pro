@@ -252,7 +252,7 @@ void stepSequencerWidget::updatePlaybackPosition() {
   stepPatternChain* myPatternChain = mySequencerCore->getPatternChain();
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
   stepSequence* activeSequence = myPattern->getActiveSequence();
-  int s = myPattern->getCurrentStepIndex();
+  int s = myPattern->getCurrentStepIndex()-1;
   //fprintf(stderr,"DEBUG: patternStepsong %d\n",patternStepSong);
   if (patternStepSong == 2) {
     //chain mode functions 
@@ -296,24 +296,26 @@ void stepSequencerWidget::updatePlaybackPosition() {
     
     //setStepButtonColors();
     if (playing) {
-      int myButtonIndex = s % 16;
-      int myPrevButtonIndex = myButtonIndex-1;
-      if (myPrevButtonIndex < 0) {
-        myPrevButtonIndex=15;
-      }
-      QAbstractButton* myButton = ui->sequenceGroup->button(myButtonIndex);
-      pal.setColor( QPalette::Active, QPalette::Button, buttonPlayColor);
-      myButton ->setPalette( pal ); 
-      myButton = ui->sequenceGroup->button(myPrevButtonIndex);
-      step* myStep = activeSequence->getStep(myPrevButtonIndex+(selectedMeasure*16));
-      if (myStep->isOn) {
-        pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
+      if(s != -1) {
+        int myButtonIndex = s % 16;
+        int myPrevButtonIndex = myButtonIndex-1;
+        if (myPrevButtonIndex < 0) {
+          myPrevButtonIndex = 15;
+        }
+        QAbstractButton* myButton = ui->sequenceGroup->button(myButtonIndex);
+        pal.setColor( QPalette::Active, QPalette::Button, buttonPlayColor);
         myButton ->setPalette( pal ); 
-      } else {
-        pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
-        myButton ->setPalette( pal );
-      }    
-    }      
+        myButton = ui->sequenceGroup->button(myPrevButtonIndex);
+        step* myStep = activeSequence->getStep(myPrevButtonIndex+(selectedMeasure*16));
+        if (myStep->isOn) {
+          pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
+          myButton ->setPalette( pal ); 
+        } else {
+          pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
+          myButton ->setPalette( pal );
+        }    
+      }
+    }        
   }
   //doesnt matter what mode we are in, we should always uplate the playback indicator
   if (playing) {
