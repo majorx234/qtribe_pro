@@ -282,10 +282,10 @@ void stepSequencerWidget::updatePlaybackPosition() {
       //myButton ->setPalette( pal );
     }
   } else {
-    if (delayedPatternChange && s == 0) {
+    if (s == 0 && delayedPatternChange) {
       mySequencerCore->setPattern(delayedPatternChange);
       ui->dataDisplay->setText(QString("P%1").arg(mySequencerCore->getCurrentPatternIndex()));
-      delayedPatternChange=0;
+      delayedPatternChange = 0;
       fprintf(stderr,"DEBUG: about to call patternModeGroup_clicked %d\n",patternMode);
       patternModeGroup_clicked(patternMode);
       setSynthPartButtonColors();

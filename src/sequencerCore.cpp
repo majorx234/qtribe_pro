@@ -87,7 +87,7 @@ void SequencerCore::stopSequence() {
 
 void SequencerCore::setPattern(int i) {
   myPatternNumber = i;
-  myPattern=patterns[i-1];
+  myPattern = patterns[i-1];
 }
 
 int SequencerCore::getCurrentPatternIndex() {
@@ -98,7 +98,7 @@ stepPattern* SequencerCore::getCurrentPattern() {
   //catch oddball condition - switching from chain to pattern mode after setting all steps to P0 in chain mode
   if (myPatternNumber == 0) {
     myPatternNumber = 1;
-    myPattern=patterns[0];
+    myPattern = patterns[0];
   }
   return myPattern;
 }
@@ -244,10 +244,10 @@ void SequencerCore::loadBank(char* fileName) {
     delete patterns[i];  
     patterns[i] = nullptr;
   }
-  myPattern=NULL;
-  stepPatternChain* currentPatternChain=nullptr;
-  stepPattern* currentPattern=nullptr;
-  stepSequence* currentSequence=nullptr;  
+  myPattern = nullptr;
+  stepPatternChain* currentPatternChain = nullptr;
+  stepPattern* currentPattern = nullptr;
+  stepSequence* currentSequence = nullptr;  
   step* currentStep;
   int currentStepIndex = 0;
   int patternLength = 0;
@@ -312,15 +312,15 @@ void SequencerCore::loadBank(char* fileName) {
       //sequenceName.ascii(),sequenceType.ascii(),muted,selectedStep,midiChannel,drumSequence,drumNote
 
       //type, name, drumnote
-      int seqindex=currentPattern->addSequence(data[0],data[1],stoi(data[6]));
-      currentSequence=currentPattern->getSequence(seqindex);
+      int seqindex = currentPattern->addSequence(data[0],data[1],stoi(data[6]));
+      currentSequence = currentPattern->getSequence(seqindex);
       currentSequence->setMuted(stoi(data[2]));
       
       currentSequence->setMidiChannel(stoi(data[4]));
-      if (seqindex==1) {
+      if (seqindex == 1) {
         currentPattern->setActiveSequence(seqindex);
       }
-      currentStepIndex=0;
+      currentStepIndex = 0;
     }
     
     if (parts[0]=="step") {  
@@ -328,8 +328,8 @@ void SequencerCore::loadBank(char* fileName) {
       const char delim = '|';
       split(parts[1],delim,data);
 
-      currentStep=currentSequence->getStep(currentStepIndex);
-      currentStep->isOn=stoi(data[0]);
+      currentStep = currentSequence->getStep(currentStepIndex);
+      currentStep->isOn = stoi(data[0]);
       currentStep->noteNumber   = stoi(data[1]);
       currentStep->noteLength   = stoi(data[2]);
       currentStep->noteVelocity = stoi(data[3]);
