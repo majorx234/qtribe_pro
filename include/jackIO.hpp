@@ -23,17 +23,14 @@
 #ifndef _JACKIO_HPP_
 #define _JACKIO_HPP_
 
-#define MIDI_NOTE_ON		0x90
-#define MIDI_NOTE_OFF		0x80
+#define MIDI_NOTE_ON 0x90
+#define MIDI_NOTE_OFF 0x80
 
 #include <sys/time.h>
 
 #include <jack/jack.h>
 #include <jack/midiport.h>
 #include <jack/ringbuffer.h>
-
-#include <stdio.h>
-#include <string.h>
 
 struct midiMessage {
   unsigned char midiData[3];

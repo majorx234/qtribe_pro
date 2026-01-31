@@ -64,7 +64,7 @@ stepSequence::stepSequence()
   ,arpCounter(0) {
   //fprintf(stderr,"DEBUG: stepSequence::stepSequence() - Creating stepSequence\n");
 
-  
+
   //fill our sequence with steps
   for (int i=0;i<MAX_STEPS;i++) {
     stepArray[i] = new step(0,40,1,64,0); //default - E2, 1 step length, 64 velocity, no tonality
@@ -195,14 +195,14 @@ int stepSequence::getNextArpOffset(int tonality) {
   //major - W W H W W W H W W H W W W H
   //minor - W H W W W H W W H W W W H W
   //default to an ping-pong octave thing
-  
+
   int patternLength=3;
   int defaultArray[] = {12,24,-12,-24};
   int arpOffset=defaultArray[arpCounter];
 
   int majArray[] = {4,3,4,3,-14};
   int minArray[] = {3,4,3,4,-14};
-  
+
   if (tonality == 1) {
     patternLength = 4;
     arpOffset = majArray[arpCounter];
@@ -210,7 +210,7 @@ int stepSequence::getNextArpOffset(int tonality) {
     patternLength = 4;
     arpOffset = minArray[arpCounter];
   }
-  
+
   arpCounter++;
   if (arpCounter > patternLength) {
     arpCounter=0;
@@ -223,13 +223,13 @@ stepPattern::stepPattern() {
   //constructor
   //the stepPattern is our main building block
   //this is a container for all the sequenced tracks - synth lines, chords and drums.
-  
+
   currentStepIndex = 0;
-  
+
   patternSteps = 16; //initial default length
   globalTempo = 0; //TODO: implement global tempo locking
   patternTempo = 120; //initial default tempo
-  
+
   //clear out our sequence array.
   for (int i=0;i<MAX_SEQUENCES;i++) {
     sequences[i] = nullptr;
@@ -248,7 +248,7 @@ void stepPattern::serialise(FILE* file) {
     }
   }
 }
- 
+
 int stepPattern::getPatternTempo() {
   if (globalTempo) {
     return globalTempo;
@@ -368,7 +368,7 @@ void stepPattern::removeSequence(int sequenceId) {
   stepSequence* s = sequences[seq_array_index];
   delete s;
   sequences[seq_array_index] = NULL;
-  
+
   if (sequenceId == activeSequenceId) {
     //TODO: may want to handle this closer to the GUI so we can update.
     activeSequenceId = nextAssignedId();

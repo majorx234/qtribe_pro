@@ -21,7 +21,7 @@
  ***************************************************************************/
 
 #ifndef _SEQUENCERCORE_HPP_
-#define _SEQUENCERCORE_
+#define _SEQUENCERCORE_HPP_
 
 #include <functional>
 #include "stepSequence.hpp"
@@ -33,7 +33,7 @@ class SequencerCore {
   void cleanup();
   void setPattern(int i);
   void run();
-  
+
   stepPatternChain* getPatternChain();
   stepPattern* getCurrentPattern();
   int getCurrentPatternIndex();

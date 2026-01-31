@@ -34,7 +34,7 @@ class stepSequencerWidget;
 
 class stepSequencerWidget : public QWidget{
   Q_OBJECT
- private:  
+ private:
   Ui::stepsequencerwidgetbase *ui;
  public:
   explicit stepSequencerWidget(QWidget* parent = 0,
@@ -44,35 +44,35 @@ class stepSequencerWidget : public QWidget{
   void setBankFile(char* c);
  private:
   //qTribe* mySequencer;
-  
-	SequencerCore* mySequencerCore;
-  std::thread mySequencerThread;
-  
-	int selectedStep;
-	int selectedChainStep;
-	
-	int patternStepSong;
-	int stepMode;
-	int patternMode;
 
-	int playing;
-	
-	int delayedPatternChange;
-	
-	int muteMode;
-	int selectedMeasure;
-	QPalette pal;
-	QColor buttonOffColor;
-	QColor buttonOnColor;
-	QColor buttonPlayColor;
-	QColor selectedChainColor;
-	QString bankFile;
-	void setStepButtonColors();
-	void chainClearStepButtonColors();
-	void setSynthPartButtonColors();
-	void setDrumPartButtonColors();
-	void updatePlaybackPosition();
-  int get_dataDial_value();                             
+  SequencerCore* mySequencerCore;
+  std::thread mySequencerThread;
+
+  int selectedStep;
+  int selectedChainStep;
+
+  int patternStepSong;
+  int stepMode;
+  int patternMode;
+
+  int playing;
+
+  int delayedPatternChange;
+
+  int muteMode;
+  int selectedMeasure;
+  QPalette pal;
+  QColor buttonOffColor;
+  QColor buttonOnColor;
+  QColor buttonPlayColor;
+  QColor selectedChainColor;
+  QString bankFile;
+  void setStepButtonColors();
+  void chainClearStepButtonColors();
+  void setSynthPartButtonColors();
+  void setDrumPartButtonColors();
+  void updatePlaybackPosition();
+  int get_dataDial_value();
 
  public slots:
   void start();

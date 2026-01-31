@@ -21,18 +21,15 @@
  ***************************************************************************/
 
 #include <QtWidgets>
-#include <string>
 
 #include "qtribe.hpp"
 
 qTribe::qTribe()
     : main_sequencer_widget(new stepSequencerWidget(this)) {
   setCentralWidget(main_sequencer_widget);
-  
 }
 
 qTribe::~qTribe() {
-  
 }
 
 void qTribe::closeEvent(QCloseEvent *event) {
@@ -43,22 +40,20 @@ void qTribe::closeEvent(QCloseEvent *event) {
 
 
 void qTribe::resizeEvent(QResizeEvent* event) {
-	QMainWindow::resizeEvent(event);
+  QMainWindow::resizeEvent(event);
 }
 
 void qTribe::close() {
-  QMainWindow::close();    
+  QMainWindow::close();
 }
 
 void qTribe::open() {
-  
 }
 
 void qTribe::newFile() {
-  
 }
 
 bool qTribe::save() {
-  return false;  
+  return false;
 }
 

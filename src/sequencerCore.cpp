@@ -23,21 +23,18 @@
 #include "sequencerCore.hpp"
 
 #include <stdio.h>
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 #include <thread>
-#include <chrono>
-#include <functional>
+#include <fstream>
 
 #include "jackIO.hpp"
- 
+
 void split(std::string const &str, const char delim,
             std::vector<std::string> &out) {
     size_t start;
     size_t end = 0;
- 
+
     while ((start = str.find_first_not_of(delim, end)) != std::string::npos) {
         end = str.find(delim, start);
         out.push_back(str.substr(start, end - start));
@@ -53,7 +50,7 @@ SequencerCore::SequencerCore(std::function<void ()> step_callback)
     , stepCallback(step_callback) {
   //constructor
   backendInitialised = initJACK();
-  
+
   if (backendInitialised) {
     fprintf(stderr,"Backend Init. successful.\n");
   } else {
@@ -65,15 +62,15 @@ SequencerCore::~SequencerCore() {
   //destructor
  }
 
-void SequencerCore::cleanup() {  
+void SequencerCore::cleanup() {
   playing=0;
   alive=0;
   // TODO: what for is this wait?
-  //  wait();  
+  //  wait();
 }
 
 void SequencerCore::start() {
-  // TODO:need some syncing mechanism here 
+  // TODO:need some syncing mechanism here
 }
 
 void SequencerCore::playSequence() {
@@ -113,11 +110,11 @@ void SequencerCore::run() {
     if(playing) {
       stepCallback();
       double thisStepTime = getJackTime();
-      
+
       //was going to offset multiple notes played at same time by 1ms.. but not
       //sure if necessary.. JACK does odd things from time to time
       int seq_note_inc = 0;
-      
+
       double stepDelta = ((double(60)/(double)myPattern->getPatternTempo())/(double)4 )*1000; //ms
       if (thisStepTime >= (last_time + stepDelta)) {
         for (int i=0;i<12;i++) {
@@ -133,7 +130,7 @@ void SequencerCore::run() {
                   stepSequence* myAccents = myPattern->getDrumAccentSequence();
                   step* accentStep = myAccents->getStep(patternStep);
                   int modVelocity = myStep->noteVelocity;
-                
+
                   if (accentStep->isOn) {
                     //implement simple accenting.
                     modVelocity = modVelocity*2;
@@ -150,17 +147,17 @@ void SequencerCore::run() {
                 }
                 seq_note_inc+=1;
               }
-              if (arpStep->isOn) { 
-                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, arpStep->noteNumber, arpStep->noteVelocity); //note on      
+              if (arpStep->isOn) {
+                queue_message(thisStepTime+seq_note_inc, mySequence->getMidiChannel()-1, 144, arpStep->noteNumber, arpStep->noteVelocity); //note on
                 queue_message(thisStepTime+(myStep->noteLength*stepDelta), mySequence->getMidiChannel()-1, 128, arpStep->noteNumber, 0); //note off}
               }
             }
-          }  
+          }
         }
         //stepCallback();
         //move our pattern pointer along
         myPattern->nextStep();
-        last_time = thisStepTime;    
+        last_time = thisStepTime;
       } else {
         // usleep(5000);
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -174,9 +171,9 @@ void SequencerCore::run() {
 }
 
 stepPattern* SequencerCore::createBlankPattern() {
-  int ret;  
+  int ret;
   //lets try calling some of our API
-  stepPattern* newPattern = new stepPattern();  
+  stepPattern* newPattern = new stepPattern();
   //add our sequences
   ret = newPattern->addSequence("synth","synthPart_1",-1);
   newPattern->setActiveSequence(ret);
@@ -240,16 +237,16 @@ void SequencerCore::loadBank(char* fileName) {
   std::ifstream fin(fileName);
     const int LINE_LENGTH = 100;
     char str[LINE_LENGTH];
-  
+
   //trash all our patterns in memory
   for (int i=0;i<16;i++) {
-    delete patterns[i];  
+    delete patterns[i];
     patterns[i] = nullptr;
   }
   myPattern = nullptr;
   stepPatternChain* currentPatternChain = nullptr;
   stepPattern* currentPattern = nullptr;
-  stepSequence* currentSequence = nullptr;  
+  stepSequence* currentSequence = nullptr;
   step* currentStep;
   int currentStepIndex = 0;
   int patternLength = 0;
@@ -284,10 +281,10 @@ void SequencerCore::loadBank(char* fileName) {
         }
       }
     }
-    
+
     if (parts[0]=="pattern") {
       //fprintf(stderr,"FOUND PATTERN\n");
-      
+
       //we need to set the patern length of the previous pattern when we encounter a pattern tag.
       //see also the block at the ned of the loop that sets the length of the last pattern
       if (patternLength && currentPattern) {
@@ -305,7 +302,7 @@ void SequencerCore::loadBank(char* fileName) {
       currentPattern->setPatternTempo(stoi(data[2]));
       currentPattern->setDrumAccentSequence(stoi(data[3]));
     }
-    
+
     if (parts[0]=="sequence") {
       //fprintf(stderr,"FOUND SEQUENCE\n");
       std::vector<std::string> data;
@@ -317,15 +314,15 @@ void SequencerCore::loadBank(char* fileName) {
       int seqindex = currentPattern->addSequence(data[0],data[1],stoi(data[6]));
       currentSequence = currentPattern->getSequence(seqindex);
       currentSequence->setMuted(stoi(data[2]));
-      
+
       currentSequence->setMidiChannel(stoi(data[4]));
       if (seqindex == 1) {
         currentPattern->setActiveSequence(seqindex);
       }
       currentStepIndex = 0;
     }
-    
-    if (parts[0]=="step") {  
+
+    if (parts[0]=="step") {
       std::vector<std::string> data;
       const char delim = '|';
       split(parts[1],delim,data);
@@ -343,7 +340,7 @@ void SequencerCore::loadBank(char* fileName) {
   //set patternlength of last pattern.
   if (patternLength && currentPattern) {
     currentPattern->setPatternLength(patternLength);
-  }  
+  }
   myPattern=patterns[0];
   myPatternNumber=1;
   if (currentPatternChain != NULL) {

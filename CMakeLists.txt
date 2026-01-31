@@ -21,38 +21,40 @@ include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
 
 set(JACK_IO_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/include/jackIO.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/jackIO.cpp)
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/jackIO.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/jackIO.cpp
+)
 
 set(STEP_SEQUENCE_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/stepSequence.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/stepSequence.hpp
-  )
+)
 
 set(STEP_SEQUENCER_CORE_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/include/sequencerCore.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/sequencerCore.cpp
-	)
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/sequencerCore.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/sequencerCore.cpp
+)
 
 set(STEP_SEQUENCER_WIDGET_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/include/stepSequencerWidget.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/stepSequencerWidget.cpp
-	)
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/stepSequencerWidget.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/stepSequencerWidget.cpp
+)
 
 set(QTRIBE_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/include/qtribe.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/qtribe.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-	)
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/qtribe.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/qtribe.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+)
 
-QT5_WRAP_UI(STEP_SEQUENCER_WIDGET_BASE_UISrcs 
+QT5_WRAP_UI(STEP_SEQUENCER_WIDGET_BASE_UISrcs
             ${CMAKE_CURRENT_SOURCE_DIR}/src/stepsequencerwidgetbase.ui)
 
-QT5_WRAP_CPP(STEP_SEQUENCER_WIDGET_MOCrcs ${STEP_SEQUENCER_WIDGET_SOURCES})					
+QT5_WRAP_CPP(STEP_SEQUENCER_WIDGET_MOCrcs ${STEP_SEQUENCER_WIDGET_SOURCES})
 QT5_WRAP_CPP(QTRIBE_MOCrcs ${QTRIBE_SOURCES})
 
 add_library(jackIO
-	${JACK_IO_SOURCES})
+  ${JACK_IO_SOURCES}
+)
 
 add_library(stepSequence
   ${STEP_SEQUENCE_SOURCES}
@@ -61,30 +63,31 @@ add_library(stepSequence
 target_link_libraries(stepSequence PRIVATE ${JACK_LIBRARIES})
 
 add_library(stepSequencerCore
-	${STEP_SEQUENCER_CORE_SOURCES})
+  ${STEP_SEQUENCER_CORE_SOURCES}
+)
 
 target_link_libraries(stepSequencerCore
-	jackIO
-	stepSequence
-	)
+  jackIO
+  stepSequence
+)
 
 add_library(stepSequencerWidget
-	${STEP_SEQUENCER_WIDGET_SOURCES}
-	${STEP_SEQUENCER_WIDGET_BASE_UISrcs}
-	${STEP_SEQUENCER_WIDGET_MOCrcs}
-	)
+  ${STEP_SEQUENCER_WIDGET_SOURCES}
+  ${STEP_SEQUENCER_WIDGET_BASE_UISrcs}
+  ${STEP_SEQUENCER_WIDGET_MOCrcs}
+)
 target_link_libraries(stepSequencerWidget
-	Threads::Threads
-	stepSequencerCore
-	)
+  Threads::Threads
+  stepSequencerCore
+)
 
 add_executable(qtribe
-	${QTRIBE_SOURCES}
-	${QTRIBE_MOCrcs}
-	)
+  ${QTRIBE_SOURCES}
+  ${QTRIBE_MOCrcs}
+)
 target_link_libraries(qtribe
-	stepSequencerWidget
-  )
+  stepSequencerWidget
+)
 
 qt5_use_modules(stepSequencerWidget Core Gui Widgets)
 qt5_use_modules(qtribe Core Gui Widgets)
