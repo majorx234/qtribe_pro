@@ -24,6 +24,7 @@
 #define _STEPSEQUENCE_HPP_
 
 #include <string>
+#include "serializer.hpp"
 
 #define MAX_SEQUENCES 16
 #define MAX_STEPS 128
@@ -38,7 +39,7 @@ class step{
   step();
   step(int,int,int,int,int);
   ~step();
-  void serialise(FILE*);
+  void serialise(Serializer*);
 };
 
 class stepSequence {
@@ -80,7 +81,7 @@ class stepSequence {
 
   step* getStep(int);
   step* getArpStep(int);
-  void serialise(FILE*);
+  void serialise(Serializer*);
 
   void arpeggiate();
   void clearArp();
@@ -127,7 +128,7 @@ class stepPattern {
   void setCurrentStepIndex(int);
 
   int nextStep();
-  void serialise(FILE*);
+  void serialise(Serializer*);
 
  private:
   int nextFreeId();
@@ -152,7 +153,7 @@ class stepPatternChain {
   void resetPatternMutes();
   void setPartMuted(int, int);
 
-  void serialise(FILE*);
+  void serialise(Serializer*);
 
  private:
   int patternArray[16];

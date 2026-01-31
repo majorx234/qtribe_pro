@@ -736,7 +736,7 @@ void stepSequencerWidget::loadButton_clicked() {
   playing=0;
   mySequencerCore->loadBank((char*)bankFile.toStdString().c_str());
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
-  
+
   //set up our UI state to something resembling the default.
   ui->play->setDown(true);
   ui->bpm->setValue(myPattern->getPatternTempo());

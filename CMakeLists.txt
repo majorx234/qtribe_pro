@@ -26,6 +26,7 @@ set(JACK_IO_SOURCES
 )
 
 set(STEP_SEQUENCE_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/serializer.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/stepSequence.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/stepSequence.hpp
 )
@@ -33,6 +34,8 @@ set(STEP_SEQUENCE_SOURCES
 set(STEP_SEQUENCER_CORE_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/include/sequencerCore.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/sequencerCore.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/basic_serializer.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/basic_serializer.cpp
 )
 
 set(STEP_SEQUENCER_WIDGET_SOURCES

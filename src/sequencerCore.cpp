@@ -14,7 +14,7 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
- *   You should have received a copy of the GNU General Public License     * 
+ *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
@@ -29,6 +29,8 @@
 #include <fstream>
 
 #include "jackIO.hpp"
+#include "serializer.hpp"
+#include "basic_serializer.hpp"
 
 void split(std::string const &str, const char delim,
             std::vector<std::string> &out) {
@@ -207,13 +209,17 @@ void SequencerCore::initSequencer() {
   myPatternChain = new stepPatternChain();
 }
 
-void SequencerCore::saveBank(char* fileName) {
+void SequencerCore::saveBank(char *fileName) {
+  BasicSerializer serializer;
+
   FILE* file;
   file = fopen (fileName,"w");
-  myPatternChain->serialise(file);
+  myPatternChain->serialise(&serializer);
   for (int i=0;i<16;i++) {
-    patterns[i]->serialise(file);
+    patterns[i]->serialise(&serializer);
   }
+  std::string to_save = serializer.get_result();
+  fprintf(file, to_save.c_str());
   fclose(file);
 }
 
@@ -235,8 +241,8 @@ void SequencerCore::setActiveSequence(int seq) {
 
 void SequencerCore::loadBank(char* fileName) {
   std::ifstream fin(fileName);
-    const int LINE_LENGTH = 100;
-    char str[LINE_LENGTH];
+  const int LINE_LENGTH = 100;
+  char str[LINE_LENGTH];
 
   //trash all our patterns in memory
   for (int i=0;i<16;i++) {

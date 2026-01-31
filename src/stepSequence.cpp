@@ -21,6 +21,7 @@
  ***************************************************************************/
 
 #include "stepSequence.hpp"
+#include <string>
 
 step::step() {
   //constructor
@@ -47,8 +48,11 @@ step::~step() {
   //fprintf(stderr,"DEBUG: step::~step() - Destroying step\n");
 }
 
-void step::serialise(FILE* file) {
-  fprintf(file,"step:%d|%d|%d|%d|%d\n",isOn,noteNumber,noteLength,noteVelocity,noteTonality);
+void step::serialise(Serializer *serializer) {
+  char buffer[64] = {0};
+  sprintf(buffer,"step:%d|%d|%d|%d|%d",isOn,noteNumber,noteLength,noteVelocity,noteTonality);
+  std::string str(buffer);
+  serializer->addln(buffer);
 }
 
 stepSequence::stepSequence()
@@ -135,10 +139,14 @@ void stepSequence::setSequenceLength(int steps) {
   sequenceLength=steps;
 }
 
-void stepSequence::serialise(FILE* file) {
-  fprintf(file,"sequence:%s|%s|%d|%d|%d|%d|%d\n",sequenceName.c_str() ,sequenceType.c_str(),muted,selectedStep,midiChannel,drumSequence,drumNote);
+void stepSequence::serialise(Serializer *serializer) {
+  char buffer[64] = {0};
+  sprintf(buffer, "sequence:%s|%s|%d|%d|%d|%d|%d",sequenceName.c_str() ,sequenceType.c_str(),muted,selectedStep,midiChannel,drumSequence,drumNote);
+  std::string str(buffer);
+  serializer->addln(buffer);
+
   for (int i=0;i<MAX_STEPS;i++) {
-    stepArray[i]->serialise(file);
+    stepArray[i]->serialise(serializer);
   }
 }
 
@@ -240,11 +248,15 @@ stepPattern::~stepPattern() {
   //destructor
 }
 
-void stepPattern::serialise(FILE* file) {
-  fprintf(file,"pattern:%d|%d|%d|%d\n",currentStepIndex,patternSteps,patternTempo,drumAccentSequence);
+void stepPattern::serialise(Serializer *serializer) {
+  char buffer[64] = {0};
+  sprintf(buffer,"pattern:%d|%d|%d|%d",currentStepIndex,patternSteps,patternTempo,drumAccentSequence);
+  std::string str(buffer);
+  serializer->addln(buffer);
+
   for (int i=0;i<MAX_SEQUENCES;i++) {
     if (sequences[i]) {
-      sequences[i]->serialise(file);
+      sequences[i]->serialise(serializer);
     }
   }
 }
@@ -410,7 +422,7 @@ void stepPatternChain::resetPatternMutes() {
 }
 
 void stepPatternChain::setPartMuted(int i, int j) {
-  fprintf(stderr,"Setting part[%d] to %d\n",i,j); 
+  fprintf(stderr,"Setting part[%d] to %d\n",i,j);
   partsMuted[i] = j;
 }
 
@@ -448,18 +460,20 @@ void stepPatternChain::setPattern(int i, int j) {
   patternArray[i] = j;
 }
 
-void stepPatternChain::serialise(FILE* file) {
-  fprintf(file,"patternchain:");
+void stepPatternChain::serialise(Serializer *serializer) {
+  char buffer[2048] = {0};
+  size_t pos = sprintf(buffer, "patternchain:");
   for (int i=0;i < 16;i++) {
-    fprintf(file,"%d|",patternArray[i]);
+    pos += sprintf(buffer + pos,"%d|",patternArray[i]);
   }
-  fprintf(file,"\n");
+  pos += sprintf(buffer + pos,"\n");
 
-  fprintf(file,"mutes:");
+  pos += sprintf(buffer + pos, "mutes:");
   for (int i=0;i<MAX_SEQUENCES;i++) {
-    fprintf(file,"%d|",partsMuted[i]);
+    pos += sprintf(buffer + pos,"%d|",partsMuted[i]);
   }
-  fprintf(file,"\n");
+  std::string str(buffer);
+  serializer->addln(buffer);
 }
 
 stepPatternChain::~stepPatternChain() {
