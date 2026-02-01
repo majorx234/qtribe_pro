@@ -40,15 +40,15 @@ void catchUnixSignal(int quitSignal) {
   sa.sa_mask = blocking_mask;
   sa.sa_flags = 0;
 
-  sigaction(quitSignal, &sa, nullptr);  
+  sigaction(quitSignal, &sa, nullptr);
 }
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
   catchUnixSignal(SIGINT);
 
-  qTribe main_window;
+  qTribmySequencerThreade main_window;
   main_window.show();
-  
+
   return app.exec();
 }

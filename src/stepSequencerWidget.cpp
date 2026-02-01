@@ -41,7 +41,7 @@ void assignIdsToBottons(QButtonGroup *buttonGroup, QString regex) {
   QList<QAbstractButton *> buttons = buttonGroup->buttons();
   QRegExp re(regex);
   foreach (QAbstractButton *button, buttons) {
-    QString qbuttonname = button->objectName(); 
+    QString qbuttonname = button->objectName();
     (void)re.indexIn(qbuttonname); // we know it matches, but we need the captured text
     const int id = re.cap(1).toInt() - 1;
     buttonGroup->setId(button, id); // assuming the button is already in the button group
@@ -104,14 +104,14 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
     }
   }
   setBankFile((char*)homePath.toStdString().c_str());
-  
+
   // set id of Buttons in Buttongroups:
   assignIdsToBottons(ui->sequenceGroup,QString("step(\\d+)"));
   assignIdsToBottons(ui->drumParts,QString("drumPartButton(\\d+)"));
   assignIdsToBottons(ui->synthParts, QString("synthPart(\\d+)"));
   assignIdsToBottons(ui->playPositionGroup,QString("playPositionButton(\\d+)"));
   assignIdsToBottons(ui->editPositionGroup,QString("editPositionButton(\\d+)"));
-  
+
   // connect signals and slots
   connect(ui->play, &QToolButton::toggled, this, &stepSequencerWidget::play_toggled );
   connect(ui->sequenceGroup, &QButtonGroup::idClicked, this, &stepSequencerWidget::sequence_clicked);
@@ -139,7 +139,8 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
 }
 
 stepSequencerWidget::~stepSequencerWidget() {
-  
+  mySequencerCore->cleanup();
+  mySequencerThread.join();
 }
 
 void stepSequencerWidget::start() {
@@ -165,12 +166,12 @@ void stepSequencerWidget::setStepButtonColors() {
     }
     if (myStep->isOn) {
        pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
-      myButton ->setPalette( pal ); 
+      myButton ->setPalette( pal );
     } else {
       pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
       myButton ->setPalette( pal );
     }
-  }  
+  }
 }
 
 void stepSequencerWidget::chainClearStepButtonColors() {
@@ -178,7 +179,7 @@ void stepSequencerWidget::chainClearStepButtonColors() {
   for (int i=0;i< 16;i++) {
     QAbstractButton* myButton = ui->sequenceGroup->button(i);
     myButton->setDown(true);
-    
+
     if (myPatternChain->getPatternIndex(i) != 0) {
       pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
       myButton ->setPalette( pal );
@@ -186,16 +187,16 @@ void stepSequencerWidget::chainClearStepButtonColors() {
       pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
       myButton ->setPalette( pal );
     }
-  }  
-  
+  }
+
   //light up the currently playing chain index
   int myButtonIndex=myPatternChain->getCurrentPatternIndex();
-        
+
   QAbstractButton* chainButton = ui->sequenceGroup->button(myButtonIndex);
   pal.setColor( QPalette::Active, QPalette::Button, buttonPlayColor);
   chainButton ->setPalette( pal );
 
-  //we're in chain mode so we need to light up the currentsly selected chain step      
+  //we're in chain mode so we need to light up the currentsly selected chain step
   QToolButton* myButton=(QToolButton*) ui->sequenceGroup->button(selectedChainStep);
   pal.setColor( QPalette::Active, QPalette::Button,selectedChainColor);
   myButton ->setPalette( pal );
@@ -213,15 +214,15 @@ void stepSequencerWidget::setSynthPartButtonColors() {
 
     if (! mySequence->getMuted()) {
        pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
-      myButton ->setPalette( pal ); 
+      myButton ->setPalette( pal );
     } else {
       pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
       myButton ->setPalette( pal );
     }
     if (mySequence==activeSequence) {
       myButton->setChecked( true );
-    }    
-  }  
+    }
+  }
 }
 void stepSequencerWidget::setDrumPartButtonColors() {
   stepSequence* mySequence;
@@ -236,16 +237,16 @@ void stepSequencerWidget::setDrumPartButtonColors() {
 
     if (! mySequence->getMuted()) {
       pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
-      myButton ->setPalette( pal ); 
+      myButton ->setPalette( pal );
     } else {
       pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
       myButton ->setPalette( pal );
     }
-    
+
     if (mySequence==activeSequence) {
       myButton->setChecked( true );
-    }    
-  }  
+    }
+  }
 }
 
 void stepSequencerWidget::updatePlaybackPosition() {
@@ -255,18 +256,18 @@ void stepSequencerWidget::updatePlaybackPosition() {
   int s = myPattern->getCurrentStepIndex()-1;
   //fprintf(stderr,"DEBUG: patternStepsong %d\n",patternStepSong);
   if (patternStepSong == 2) {
-    //chain mode functions 
+    //chain mode functions
     if ( s == 15) {
       //this is here to ensure we dont update multiple times per step - enable delayedPatternchange
       //on the last step in song/chain mode so we can be sure our chain incrementing call below
       //will not get called more than once.
       delayedPatternChange = 1;
-    }  
+    }
 
     if (s==0 && delayedPatternChange) {
       //we're in song mode, so we need to switch to the next pattern in the chain,
       //and update the step key to show the current pattern
-      
+
       delayedPatternChange = 0;
       myPatternChain->getNextPattern();
       setSynthPartButtonColors();
@@ -276,7 +277,7 @@ void stepSequencerWidget::updatePlaybackPosition() {
       ui->dataDisplay->setText(QString("P%1").arg(myPatternChain->getCurrentPattern()));
       //we're in chain mode so we need to light up the step currently playing
       //int myButtonIndex=myPatternChain->getCurrentPatternIndex();
-        
+
       //QToolButton* myButton=(QToolButton*) sequenceGroup->find(myButtonIndex);
       //pal.setColor( QPalette::Active, QColorGroup::Button, buttonPlayColor);
       //myButton ->setPalette( pal );
@@ -293,7 +294,7 @@ void stepSequencerWidget::updatePlaybackPosition() {
       setStepButtonColors();
     }
     //fprintf(stderr,"stepPos: %d\n",s % 16);
-    
+
     //setStepButtonColors();
     if (playing) {
       if(s != -1) {
@@ -304,18 +305,18 @@ void stepSequencerWidget::updatePlaybackPosition() {
         }
         QAbstractButton* myButton = ui->sequenceGroup->button(myButtonIndex);
         pal.setColor( QPalette::Active, QPalette::Button, buttonPlayColor);
-        myButton ->setPalette( pal ); 
+        myButton ->setPalette( pal );
         myButton = ui->sequenceGroup->button(myPrevButtonIndex);
         step* myStep = activeSequence->getStep(myPrevButtonIndex+(selectedMeasure*16));
         if (myStep->isOn) {
           pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
-          myButton ->setPalette( pal ); 
+          myButton ->setPalette( pal );
         } else {
           pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
           myButton ->setPalette( pal );
-        }    
+        }
       }
-    }        
+    }
   }
   //doesnt matter what mode we are in, we should always uplate the playback indicator
   if (playing) {
@@ -385,7 +386,7 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
   if (patternStepSong == 2) {
     // chain mode
     // if we have a selected step, assign the selected pattern to it.
-    
+
     stepPatternChain* myPatternChain = mySequencerCore->getPatternChain();
     // TODO: figure out where dataVal usally come from
     // looks like it is used to set value here <- come from dial
@@ -399,36 +400,36 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
     step* myStep;
     stepPattern* myPattern = mySequencerCore->getCurrentPattern();
     stepSequence* mySequence=myPattern->getActiveSequence();
-  
+
     for (int i=0;i< 16;i++) {
       QAbstractButton* myButton = ui->sequenceGroup->button(i);
       // old: myButton->setOn(true);
       myButton->setChecked(true);
     }
 
-    if (selectedStep) {    
+    if (selectedStep) {
       int step_array_index=selectedStep-1;
       // old: ui->sequenceGroup->setButton(step_array_index);
       ui->sequenceGroup->button(step_array_index)->setDown(true);
       myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));
-      
+
       if (stepMode==1) {
-        ui->dataDisplay->setText(QString("%1").arg(noteNames[myStep->noteNumber]));    
+        ui->dataDisplay->setText(QString("%1").arg(noteNames[myStep->noteNumber]));
       }
       if (stepMode==2) {
-        ui->dataDisplay->setText(QString("%1").arg(myStep->noteLength));    
+        ui->dataDisplay->setText(QString("%1").arg(myStep->noteLength));
       }
       if (stepMode==3) {
-        ui->dataDisplay->setText(QString("%1").arg(myStep->noteVelocity));    
+        ui->dataDisplay->setText(QString("%1").arg(myStep->noteVelocity));
       }
       if (stepMode==4) {
-        ui->dataDisplay->setText(QString("%1").arg(myStep->noteTonality));    
+        ui->dataDisplay->setText(QString("%1").arg(myStep->noteTonality));
       }
     }
     if (mySequence->drumSequence==1) {
       //drum part
       if (stepMode==1) {
-        ui->dataDisplay->setText(QString("%1").arg(noteNames[mySequence->drumNote]));    
+        ui->dataDisplay->setText(QString("%1").arg(noteNames[mySequence->drumNote]));
       }
     }
   } else {
@@ -441,7 +442,7 @@ void stepSequencerWidget::synthParts_clicked(int sequencer_part_index) {
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
   stepSequence* mySequence = myPattern->getSequence(sequencerPart);
   QAbstractButton* myButton = ui->synthParts->button(sequencer_part_index);
-  
+
   if (muteMode) {
     if (! mySequence->getMuted()) {
       mySequence->setMuted(1);
@@ -451,7 +452,7 @@ void stepSequencerWidget::synthParts_clicked(int sequencer_part_index) {
   }
   myPattern->setActiveSequence(sequencerPart);
   myButton->setChecked(true);
-  
+
   fprintf(stderr,"wtf? %d\n",mySequence->isArp());
   if (mySequence->isArp() == true) {
     ui->arpOn->setChecked(true);
@@ -472,12 +473,12 @@ void stepSequencerWidget::synthParts_clicked(int sequencer_part_index) {
 }
 
 int stepSequencerWidget::get_dataDial_value() {
-  return ui->dataDial->value(); 
+  return ui->dataDial->value();
 }
 
 void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
   // here we need to update our backed data to reflect our new selection.
-  if (patternStepSong == 0) {  
+  if (patternStepSong == 0) {
     if (patternMode == 0) {
       int modDataVal=(dataVal+9)/9;
       ui->dataDisplay->setText(QString("P%1").arg(modDataVal));
@@ -495,7 +496,7 @@ void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
       }
     }
 
-    if (patternMode==1) {      
+    if (patternMode==1) {
       int modDataVal = (dataVal+9)/9;
       //fprintf(stderr,"Setting MIDI Channel %d orig %d\n",modDataVal,dataVal);
       stepPattern* myPattern = mySequencerCore->getCurrentPattern();
@@ -515,12 +516,12 @@ void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
       ui->dataDisplay->setText(QString("%1").arg(modDataVal));
     }
   }
-  
-  //do we have a note selected in note mode? 
+
+  //do we have a note selected in note mode?
   if (patternStepSong == 1) {
     stepPattern* myPattern = mySequencerCore->getCurrentPattern();
     stepSequence* mySequence=myPattern->getActiveSequence();
-    
+
     if (mySequence->drumSequence==1 && stepMode==1) {
       mySequence->drumNote=dataVal;
       ui->dataDisplay->setText(QString("%1").arg(noteNames[dataVal]));
@@ -529,23 +530,23 @@ void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
       if (selectedStep && stepMode==1) {
         int step_array_index=selectedStep-1;
         step* myStep;
-        myStep = mySequence->getStep(step_array_index+(selectedMeasure*16));  
+        myStep = mySequence->getStep(step_array_index+(selectedMeasure*16));
         myStep->noteNumber=dataVal;
         ui->dataDisplay->setText(QString("%1").arg(noteNames[dataVal]));
         //fprintf(stderr,"STEP INFO: On: %d Note Number %d Length %d Vel %d\n",myStep->isOn,myStep->noteNumber,myStep->noteLength,myStep->noteVelocity);
       }
-      
+
       if (selectedStep && stepMode==3) {
         int step_array_index=selectedStep-1;
         step* myStep;
-        myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+        myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));
         myStep->noteVelocity=dataVal;
         ui->dataDisplay->setText(QString("%1").arg(dataVal));
       }
       if (selectedStep && stepMode==4) {
         int step_array_index=selectedStep-1;
         step* myStep;
-        myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+        myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));
         myStep->noteTonality=dataVal;
         ui->dataDisplay->setText(QString("%1").arg(dataVal));
       }
@@ -554,15 +555,15 @@ void stepSequencerWidget::dataDial_valueChanged(int dataVal) {
       int modDataVal=dataVal; //max 128 steps note length
       int step_array_index=selectedStep-1;
       step* myStep;
-      myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+      myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));
       myStep->noteLength=modDataVal;
       ui->dataDisplay->setText(QString("%1").arg(modDataVal));
-    }  
+    }
   }
   if (patternStepSong==2) {
     //chain mode
     //if we have a selected step, assign the selected pattern to it.
-    
+
     stepPatternChain* myPatternChain=mySequencerCore->getPatternChain();
     int modDataVal=(dataVal+8)/9;
     ui->dataDisplay->setText(QString("P%1").arg(modDataVal));
@@ -584,7 +585,7 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
     step* myStep;
     stepPattern* myPattern = mySequencerCore->getCurrentPattern();
     stepSequence* mySequence = myPattern->getActiveSequence();
-    myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));  
+    myStep=mySequence->getStep(step_array_index+(selectedMeasure*16));
 
     ui->dataDisplay->setText(QString("%1").arg("qTribe"));
     //fprintf(stderr,"STEP INFO: stepMode: %d On: %d Note Number %d Length %d Vel %d\n",stepMode,myStep->isOn,myStep->noteNumber,myStep->noteLength,myStep->noteVelocity);
@@ -593,7 +594,7 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
         //QPushButton* myButton
          QAbstractButton* myButton  = ui->sequenceGroup->button(step_array_index);
       if (! myStep->isOn) {
-        myStep->isOn=1;  
+        myStep->isOn=1;
         pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
         myButton ->setPalette( pal );
       } else {
@@ -602,7 +603,7 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
         pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
         myButton ->setPalette( pal );
       }
-    } 
+    }
 
     if (stepMode==1) { //note number
       //ensure this button is on, even if we clicked on it when it was on.
@@ -611,21 +612,21 @@ void stepSequencerWidget::sequence_clicked(int step_array_index) {
       ui->dataDisplay->setText(QString("%1").arg(noteNames[myStep->noteNumber]));
       //fprintf(stderr,"STEP DISPLAY INFO: %d",myStep->noteNumber);
     }
-  
+
     if (stepMode==2) { //length
       //ensure this button is on, even if we clicked on it when it was on.
       //Old: ui->sequenceGroup->setButton(step_array_index);
       ui->sequenceGroup->button(step_array_index)->setDown(true);
       ui->dataDisplay->setText(QString("%1").arg(myStep->noteLength));
     }
-  
-    if (stepMode==3) { //note velocity 
+
+    if (stepMode==3) { //note velocity
       //ensure this button is on, even if we clicked on it when it was on.
       //Old: ui->sequenceGroup->setButton(step_array_index);
       ui->sequenceGroup->button(step_array_index)->setDown(true);
       ui->dataDisplay->setText(QString("%1").arg(myStep->noteVelocity));
     }
-  }  
+  }
 }
 
 void stepSequencerWidget::drumParts_clicked(int drum_part_index) {
@@ -637,7 +638,7 @@ void stepSequencerWidget::drumParts_clicked(int drum_part_index) {
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
   stepSequence* mySequence = myPattern->getSequence(sequencer_part_index);
   QAbstractButton* myButton = ui->drumParts->button(drum_part_index);
-  
+
   if (muteMode) {
     if (! mySequence->getMuted()) {
         mySequence->setMuted(1);
@@ -685,7 +686,7 @@ void stepSequencerWidget::play_toggled(bool b) {
     } else {
       setStepButtonColors();
     }
-  }  
+  }
 }
 
 void stepSequencerWidget::patternModeGroup_clicked(int i) {
@@ -694,14 +695,14 @@ void stepSequencerWidget::patternModeGroup_clicked(int i) {
   patternMode = i;
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
   stepSequence* activeSequence = myPattern->getActiveSequence();
-  
+
   if (patternMode==0) {
     ui->dataDisplay->setText(QString("P%1").arg(mySequencerCore->getCurrentPatternIndex()));
   }
   if (patternMode==1) {
     ui->dataDisplay->setText(QString("%1").arg(activeSequence->getMidiChannel()));
   }
-  
+
   if (patternMode==2) {
     ui->dataDisplay->setText(QString("%1").arg((myPattern->getPatternLength()+9)/16));
   }
@@ -742,11 +743,11 @@ void stepSequencerWidget::loadButton_clicked() {
   ui->bpm->setValue(myPattern->getPatternTempo());
   patternStepSong=1;
   stepMode=0;
-  
+
   stepModeGroup_clicked(stepMode);
   setSynthPartButtonColors();
   setDrumPartButtonColors();
-  setStepButtonColors();  
+  setStepButtonColors();
 }
 
 void stepSequencerWidget::chainGroup_clicked(int i) {
@@ -772,6 +773,6 @@ void stepSequencerWidget::arpOn_stateChanged(bool b) {
   if (b) {
     if (mySequence->isArp() == 0) {mySequence->arpeggiate();}
   } else {
-    if (mySequence->isArp() > 0) {mySequence->clearArp();}    
+    if (mySequence->isArp() > 0) {mySequence->clearArp();}
   }
 }

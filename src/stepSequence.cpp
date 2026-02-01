@@ -461,7 +461,7 @@ void stepPatternChain::setPattern(int i, int j) {
 }
 
 void stepPatternChain::serialise(Serializer *serializer) {
-  char buffer[2048] = {0};
+  char buffer[8192] = {0};
   size_t pos = sprintf(buffer, "patternchain:");
   for (int i=0;i < 16;i++) {
     pos += sprintf(buffer + pos,"%d|",patternArray[i]);
