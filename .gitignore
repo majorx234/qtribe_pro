@@ -40,6 +40,11 @@ build/
 .cache
 compile_commands.json
 
+# CTAGS
+GPATH
+GRTAGS
+GTAGS
+
 ##### Emacs
 # -*- mode: gitignore; -*-
 *~

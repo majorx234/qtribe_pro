@@ -728,7 +728,13 @@ void stepSequencerWidget::bpm_valueChanged(int bpm) {
 }
 
 void stepSequencerWidget::writeButton_clicked() {
-  mySequencerCore->saveBank((char*)bankFile.toStdString().c_str());
+  FILE* file;
+  file = fopen ((char*)bankFile.toStdString().c_str(),"w");
+
+  std::string to_save = mySequencerCore->saveBank();
+  fprintf(file, to_save.c_str());
+  fclose(file);
+
 }
 
 void stepSequencerWidget::loadButton_clicked() {

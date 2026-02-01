@@ -43,8 +43,7 @@ class SequencerCore {
 
   void createBank();
   void loadBank(char*);
-  void saveBank(char*);
-
+  std::string saveBank();
   void setActiveSequence(int seq);
 
   SequencerCore(std::function<void ()>);
@@ -64,4 +63,4 @@ class SequencerCore {
   std::function<void ()> stepCallback;
 };
 
-#endif //  _SEQUENCERCORE_HPP_
+#endif // _SEQUENCERCORE_HPP_

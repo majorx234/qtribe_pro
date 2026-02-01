@@ -209,18 +209,14 @@ void SequencerCore::initSequencer() {
   myPatternChain = new stepPatternChain();
 }
 
-void SequencerCore::saveBank(char *fileName) {
+std::string SequencerCore::saveBank() {
   BasicSerializer serializer;
 
-  FILE* file;
-  file = fopen (fileName,"w");
   myPatternChain->serialise(&serializer);
   for (int i=0;i<16;i++) {
     patterns[i]->serialise(&serializer);
   }
-  std::string to_save = serializer.get_result();
-  fprintf(file, to_save.c_str());
-  fclose(file);
+  return serializer.get_result();
 }
 
 void SequencerCore::createBank() {
