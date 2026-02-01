@@ -31,9 +31,13 @@
 *.out
 *.app
 
+# Test stuff
+src/test.cpp
+
 build/
 .ccls-cache/
 .projectile
+.cache
 compile_commands.json
 
 ##### Emacs
