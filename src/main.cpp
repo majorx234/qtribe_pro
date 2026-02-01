@@ -23,6 +23,7 @@
 #include <QtWidgets/QApplication>
 #include <signal.h>
 #include <unistd.h>
+#include <stdio.h>
 #include "qtribe.hpp"
 
 void catchUnixSignal(int quitSignal) {
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
   catchUnixSignal(SIGINT);
 
-  qTribmySequencerThreade main_window;
+  qTribe main_window;
   main_window.show();
 
   return app.exec();

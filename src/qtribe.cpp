@@ -27,6 +27,7 @@
 qTribe::qTribe()
     : main_sequencer_widget(new stepSequencerWidget(this)) {
   setCentralWidget(main_sequencer_widget);
+  createMenuBar();
 }
 
 qTribe::~qTribe() {
@@ -54,6 +55,39 @@ void qTribe::newFile() {
 }
 
 bool qTribe::save() {
+  return false;
+}
+
+void qTribe::createMenuBar() {
+  QMenu *fileMenu;
+  QAction *openAct;
+  QAction *saveAct;
+  QAction * exitAct;
+
+  openAct = new QAction(tr("&Open"), this);
+  openAct->setShortcuts(QKeySequence::New);
+  openAct->setStatusTip(tr("Open a bank file"));
+  connect(openAct, &QAction::triggered, this, &qTribe::open);
+  saveAct = new QAction(tr("&Save"), this);
+  saveAct->setShortcuts(QKeySequence::New);
+  saveAct->setStatusTip(tr("Save a bank file"));
+  connect(saveAct, &QAction::triggered, this, &qTribe::save);
+  exitAct = new QAction(tr("&Exit"), this);
+  exitAct->setShortcuts(QKeySequence::New);
+  exitAct->setStatusTip(tr("Exit Program"));
+  connect(exitAct, &QAction::triggered, this, &qTribe::close);
+  fileMenu = menuBar()->addMenu(tr("&File"));
+  fileMenu->addAction(openAct);
+  fileMenu->addAction(saveAct);
+  fileMenu->addAction(exitAct);
+}
+
+void qTribe::createStatusBar() {
+  // TODO: implementation
+}
+
+bool qTribe::saveFile(const QString &fileName){
+  // TODO: implementation
   return false;
 }
 

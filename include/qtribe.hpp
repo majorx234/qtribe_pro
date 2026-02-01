@@ -37,8 +37,8 @@ class qTribe: public QMainWindow
   void loadFile(const QString &fileName);
  signals:
   void closed();
-  
-  
+
+
  protected:
   void closeEvent(QCloseEvent *event) override;
   void resizeEvent(QResizeEvent* event) override;
@@ -52,7 +52,7 @@ class qTribe: public QMainWindow
   void createMenuBar();
   void createStatusBar();
   bool saveFile(const QString &fileName);
-  stepSequencerWidget* main_sequencer_widget; 
+  stepSequencerWidget* main_sequencer_widget;
 };
 
 
