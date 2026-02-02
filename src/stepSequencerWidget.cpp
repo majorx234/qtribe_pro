@@ -52,7 +52,7 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
                                          const char *name)
     : QWidget(parent)
     , ui(new Ui::stepsequencerwidgetbase)
-    , bankFile(QString())
+    , bankFile(std::string())
     , playing(0)
     , selectedStep(0)
     , selectedChainStep(0)
@@ -152,7 +152,7 @@ void stepSequencerWidget::start() {
   mySequencerCore->start();
 }
 void stepSequencerWidget::setBankFile(std::string file_path) {
-  bankFile = QString::fromStdString(file_path);
+  bankFile = file_path;
 }
 
 void stepSequencerWidget::setStepButtonColors() {
@@ -734,19 +734,18 @@ void stepSequencerWidget::bpm_valueChanged(int bpm) {
 
 void stepSequencerWidget::writeButton_clicked() {
   FILE* file;
-  file = fopen ((char*)bankFile.toStdString().c_str(),"w");
+  file = fopen ((char*)bankFile.c_str(),"w");
 
   std::string to_save = mySequencerCore->saveBank();
   fprintf(file, to_save.c_str());
   fclose(file);
-
 }
 
 void stepSequencerWidget::loadButton_clicked() {
   //Currently no GUI widget for this.
   mySequencerCore->stopSequence();
   playing=0;
-  mySequencerCore->loadBank((char*)bankFile.toStdString().c_str());
+  mySequencerCore->loadBank((char*)bankFile.c_str());
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
 
   //set up our UI state to something resembling the default.

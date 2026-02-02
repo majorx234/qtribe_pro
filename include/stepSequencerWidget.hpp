@@ -66,7 +66,7 @@ class stepSequencerWidget : public QWidget{
   QColor buttonOnColor;
   QColor buttonPlayColor;
   QColor selectedChainColor;
-  QString bankFile;
+  std::string bankFile;
   void setStepButtonColors();
   void chainClearStepButtonColors();
   void setSynthPartButtonColors();
