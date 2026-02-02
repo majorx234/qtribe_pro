@@ -41,7 +41,7 @@ class stepSequencerWidget : public QWidget{
                                const char* name = 0);
       //      ,Qt::WFlags fl = 0 );
   ~stepSequencerWidget();
-  void setBankFile(char* c);
+  void setBankFile(std::string file_path);
  private:
   //qTribe* mySequencer;
 

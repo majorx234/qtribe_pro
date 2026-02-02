@@ -108,7 +108,7 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
       }
     }
   }
-  setBankFile((char*)homePath.toStdString().c_str());
+  setBankFile(homePath.toStdString());
 
   // set id of Buttons in Buttongroups:
   assignIdsToBottons(ui->sequenceGroup,QString("step(\\d+)"));
@@ -151,8 +151,8 @@ stepSequencerWidget::~stepSequencerWidget() {
 void stepSequencerWidget::start() {
   mySequencerCore->start();
 }
-void stepSequencerWidget::setBankFile(char *c) {
-  bankFile = c;
+void stepSequencerWidget::setBankFile(std::string file_path) {
+  bankFile = QString::fromStdString(file_path);
 }
 
 void stepSequencerWidget::setStepButtonColors() {
