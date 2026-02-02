@@ -42,7 +42,7 @@ class SequencerCore {
   void stopSequence();
 
   void createBank();
-  void loadBank(char*);
+  void loadBank(std::string);
   std::string saveBank();
   void setActiveSequence(int seq);
 

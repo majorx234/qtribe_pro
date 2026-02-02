@@ -27,7 +27,7 @@
 #include <vector>
 #include <thread>
 #include <fstream>
-
+#include <sstream>
 #include "jackIO.hpp"
 #include "serializer.hpp"
 #include "basic_serializer.hpp"
@@ -235,8 +235,9 @@ void SequencerCore::setActiveSequence(int seq) {
   }
 }
 
-void SequencerCore::loadBank(char* fileName) {
-  std::ifstream fin(fileName);
+void SequencerCore::loadBank(std::string file_content) {
+  std::stringstream fin;
+  fin << file_content;
   const int LINE_LENGTH = 100;
   char str[LINE_LENGTH];
 

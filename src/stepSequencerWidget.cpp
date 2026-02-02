@@ -20,8 +20,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream>
-#include <functional>
+#include <fstream>
 #include <QString>
 #include <QPushButton>
 #include <QSpinBox>
@@ -79,10 +78,16 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
   QString defaultPath = QString(DEFAULT_BANK_DIR) + QDir::separator() + file;
   if (QFile::exists(homePath)) {
     fprintf(stdout,"Loading Bankfile from path: %s\n", homePath.toStdString().c_str());
-    mySequencerCore->loadBank((char*)homePath.toStdString().c_str());
+    std::ifstream fin((char*)homePath.toStdString().c_str());
+    std::string file_content;
+    fin >> file_content;
+    mySequencerCore->loadBank(file_content);
   } else if (QFile::exists(defaultPath)) {
     fprintf(stdout,"Loading Bankfile from path: %s\n",defaultPath.toStdString().c_str());
-    mySequencerCore->loadBank((char*)defaultPath.toStdString().c_str());
+    std::ifstream fin((char*)defaultPath.toStdString().c_str());
+    std::string file_content;
+    fin >> file_content;
+    mySequencerCore->loadBank(file_content);
   } else {
     fprintf(stdout,"Creating new Bank\n");
     mySequencerCore->createBank();
