@@ -31,6 +31,11 @@ set(STEP_SEQUENCE_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/include/stepSequence.hpp
 )
 
+set(NOTICATOR_WIDGET_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/noticator_widget.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/noticator_widget.cpp
+)
+
 set(STEP_SEQUENCER_CORE_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/include/sequencerCore.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/sequencerCore.cpp
@@ -53,6 +58,7 @@ QT5_WRAP_UI(STEP_SEQUENCER_WIDGET_BASE_UISrcs
             ${CMAKE_CURRENT_SOURCE_DIR}/src/stepsequencerwidgetbase.ui)
 
 QT5_WRAP_CPP(STEP_SEQUENCER_WIDGET_MOCrcs ${STEP_SEQUENCER_WIDGET_SOURCES})
+QT5_WRAP_CPP(NOTICATOR_WIDGET_MOCrcs ${NOTICATOR_WIDGET_SOURCES})
 QT5_WRAP_CPP(QTRIBE_MOCrcs ${QTRIBE_SOURCES})
 
 add_library(jackIO
@@ -72,6 +78,13 @@ add_library(stepSequencerCore
 target_link_libraries(stepSequencerCore
   jackIO
   stepSequence
+)
+
+add_library(noticator_widget
+  ${NOTICATOR_WIDGET_SOURCES}
+  ${NOTIFICATOR_SOURCES_MOCrcs}
+)
+target_link_libraries(noticator_widget
 )
 
 add_library(stepSequencerWidget
