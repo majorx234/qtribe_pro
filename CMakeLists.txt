@@ -10,8 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
 find_package(Jack REQUIRED)
-find_package( Qt5Widgets REQUIRED)
-find_package( Qt5Core REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Core REQUIRED)
 find_package(Threads REQUIRED)
 
 include_directories(${PROJECT_INCLUDE_DIR})
@@ -84,7 +84,17 @@ add_library(noticator_widget
   ${NOTICATOR_WIDGET_SOURCES}
   ${NOTIFICATOR_SOURCES_MOCrcs}
 )
+target_include_directories(noticator_widget PRIVATE include)
+target_include_directories(noticator_widget PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(noticator_widget SYSTEM
+ PUBLIC
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5Widgets_INCLUDE_DIRS}
+)
 target_link_libraries(noticator_widget
+ PRIVATE
+  Qt5::Core
+  Qt5::Widgets
 )
 
 add_library(stepSequencerWidget

@@ -41,6 +41,10 @@ class NoticatorWidget : public QWidget{
   int note_value;
   float length;
   int intensity;
+
+ protected:
+  virtual void paintEvent(QPaintEvent*) override;
+  virtual void resizeEvent(QResizeEvent *ev) override;
 };
 
 #endif // _NOTICATOR_WIDGET_HPP_

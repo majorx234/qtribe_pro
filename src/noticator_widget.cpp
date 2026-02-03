@@ -20,10 +20,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
 
+#include <QPainter>
+#include <QColor>
+#include <QResizeEvent>
+
 #include "noticator_widget.hpp"
 
 NoticatorWidget::NoticatorWidget(QWidget *parent)
  : note_value(0), length(0.0), intensity(0) {
+  setMinimumSize(100,100);
+  setPalette(QPalette(QColor(200, 200, 200), QColor(20, 0, 70)));
+  setAutoFillBackground(true);
   //TODO: generate widget
 }
 NoticatorWidget::~NoticatorWidget(){}
@@ -43,3 +50,20 @@ void NoticatorWidget::set_note(int note_value, float length, int intensity){
   this->intensity = intensity;
 }
 
+void NoticatorWidget::paintEvent(QPaintEvent *event) {
+  QPainter p;
+
+  int w = width();
+  int h = height();
+  int norm_inensity = (int)((((float)intensity) / 127.0) * w);
+  int norm_length = (int)(length*w);
+
+  p.begin(this);
+  p.setPen(QPen(QBrush(QColor(0, 233, 0)), 1));
+  p.drawRect(0, h - norm_inensity, norm_length, norm_inensity);
+  p.end();
+}
+
+void NoticatorWidget::resizeEvent(QResizeEvent *ev) {
+
+}
