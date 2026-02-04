@@ -54,6 +54,12 @@ set(QTRIBE_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
 
+set(NOTICATOR_WIDGET_TEST_SOURCES
+  tests/main_window_test.hpp
+  tests/main_window_test.cpp
+  tests/noticator_widget_test.cpp
+)
+
 QT5_WRAP_UI(STEP_SEQUENCER_WIDGET_BASE_UISrcs
             ${CMAKE_CURRENT_SOURCE_DIR}/src/stepsequencerwidgetbase.ui)
 
@@ -113,6 +119,19 @@ add_executable(qtribe
 )
 target_link_libraries(qtribe
   stepSequencerWidget
+)
+
+add_executable(noticator_widget_test)
+target_sources(noticator_widget_test
+ PRIVATE
+  ${NOTICATOR_WIDGET_TEST_SOURCES}
+  ${NOTICATOR_WIDGET_TEST_MOCrcs}
+)
+target_include_directories(noticator_widget_test PRIVATE include)
+target_link_libraries(noticator_widget_test
+  noticator_widget
+  Qt5::Core
+  Qt5::Widgets
 )
 
 qt5_use_modules(stepSequencerWidget Core Gui Widgets)
