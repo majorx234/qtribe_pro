@@ -35,10 +35,7 @@ class MainWindowTest : public QMainWindow
  public slots:
   void set_length_scale(int);
  private:
-  int timerId;
   NoticatorWidget noticator_widget;
- protected:
-  void timerEvent(QTimerEvent *event);
 };
 
 #endif // MAIN_WINDOW_TEST_HPP_

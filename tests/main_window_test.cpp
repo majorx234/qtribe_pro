@@ -35,7 +35,7 @@ MainWindowTest::MainWindowTest(QWidget *parent)
   QWidget *widget = new QWidget(this);
   QHBoxLayout *layout = new QHBoxLayout(widget);
 
-  dial_length->setMaximum(1.0);
+  dial_length->setMaximum(127);
   dial_intensity->setMaximum(127);
   setCentralWidget(widget);
   widget->setLayout(layout);
@@ -45,19 +45,14 @@ MainWindowTest::MainWindowTest(QWidget *parent)
 
   connect(dial_length, &QDial::valueChanged, this, &MainWindowTest::set_length_scale);
   connect(dial_intensity, &QDial::valueChanged, &this->noticator_widget, &NoticatorWidget::set_intensity);
-  timerId = startTimer(1000);
+  noticator_widget.set_length(0);
+  noticator_widget.set_intensity(0);
+  noticator_widget.update();
 }
 
 MainWindowTest::~MainWindowTest() {
-  killTimer(timerId);
 }
 
 void MainWindowTest::set_length_scale(int value) {
   this->noticator_widget.set_length(value/127.0);
-}
-
-
-void MainWindowTest::timerEvent(QTimerEvent *event) {
-  noticator_widget.set_intensity(50);
-  noticator_widget.set_length(0.8);
 }

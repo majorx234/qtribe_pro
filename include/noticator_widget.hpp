@@ -35,7 +35,7 @@ class NoticatorWidget : public QWidget{
   void set_note(int note_value);
   void set_length(float length);
   void set_intensity(int intensity);
-  void set_note(int note_value, float length, int intensity);
+  void set_full_note(int note_value, float length, int intensity);
 
  private:
   int note_value;

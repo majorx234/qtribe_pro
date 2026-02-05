@@ -37,17 +37,21 @@ NoticatorWidget::~NoticatorWidget(){}
 
 void NoticatorWidget::set_note(int note_value) {
   this->note_value = note_value;
+  update();
 }
 void NoticatorWidget::set_length(float length) {
   this->length = length;
+  update();
 }
 void NoticatorWidget::set_intensity(int intensity) {
   this->intensity = intensity;
+  update();
 }
-void NoticatorWidget::set_note(int note_value, float length, int intensity){
+void NoticatorWidget::set_full_note(int note_value, float length, int intensity){
   this->note_value = note_value;
   this->length = length;
   this->intensity = intensity;
+  update();
 }
 
 void NoticatorWidget::paintEvent(QPaintEvent *event) {
