@@ -22,12 +22,20 @@
 
 #include "main_window_test.hpp"
 #include "noticator_widget.hpp"
+#include <QHBoxLayout>
+#include <QWidget>
 
 MainWindowTest::MainWindowTest(QWidget *parent)
   : QMainWindow(parent)
   , noticator_widget(this)
 {
-  setCentralWidget(&noticator_widget);
+  QWidget *widget = new QWidget(this);
+  QHBoxLayout *layout = new QHBoxLayout(widget);
+
+  setCentralWidget(widget);
+  widget->setLayout(layout);
+  layout->addWidget(&noticator_widget);
+  
   timerId = startTimer(1000);
 }
 
