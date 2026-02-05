@@ -32,8 +32,6 @@ class MainWindowTest : public QMainWindow
  public:
   explicit MainWindowTest(QWidget *parent = 0);
   ~MainWindowTest();
- public slots:
-  void set_length_scale(int);
  private:
   NoticatorWidget noticator_widget;
 };

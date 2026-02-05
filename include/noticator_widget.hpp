@@ -33,9 +33,9 @@ class NoticatorWidget : public QWidget{
 
  public slots:
   void set_note(int note_value);
-  void set_length(float length);
+  void set_length(int length);
   void set_intensity(int intensity);
-  void set_full_note(int note_value, float length, int intensity);
+  void set_full_note(int note_value, int length, int intensity);
 
  private:
   int note_value;

@@ -39,7 +39,7 @@ void NoticatorWidget::set_note(int note_value) {
   this->note_value = note_value;
   update();
 }
-void NoticatorWidget::set_length(float length) {
+void NoticatorWidget::set_length(int length) {
   this->length = length;
   update();
 }
@@ -47,7 +47,7 @@ void NoticatorWidget::set_intensity(int intensity) {
   this->intensity = intensity;
   update();
 }
-void NoticatorWidget::set_full_note(int note_value, float length, int intensity){
+void NoticatorWidget::set_full_note(int note_value, int length, int intensity){
   this->note_value = note_value;
   this->length = length;
   this->intensity = intensity;
@@ -59,8 +59,8 @@ void NoticatorWidget::paintEvent(QPaintEvent *event) {
 
   int w = width();
   int h = height();
-  int norm_inensity = (int)((((float)intensity) / 127.0) * w);
-  int norm_length = (int)(length*w);
+  int norm_inensity = (int)((((float)intensity) / 127.0) * h);
+  int norm_length = (int)((((float)length) / 127.0) * w);
 
   p.begin(this);
   p.setPen(QPen(QBrush(QColor(0, 233, 0)), 1));

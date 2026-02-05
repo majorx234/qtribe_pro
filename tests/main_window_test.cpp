@@ -43,16 +43,12 @@ MainWindowTest::MainWindowTest(QWidget *parent)
   layout->addWidget(dial_length);
   layout->addWidget(dial_intensity);
 
-  connect(dial_length, &QDial::valueChanged, this, &MainWindowTest::set_length_scale);
+  connect(dial_length, &QDial::valueChanged, &this->noticator_widget, &NoticatorWidget::set_length);
   connect(dial_intensity, &QDial::valueChanged, &this->noticator_widget, &NoticatorWidget::set_intensity);
-  noticator_widget.set_length(0);
-  noticator_widget.set_intensity(0);
+  dial_length->setValue(63);
+  dial_intensity->setValue(63);
   noticator_widget.update();
 }
 
 MainWindowTest::~MainWindowTest() {
-}
-
-void MainWindowTest::set_length_scale(int value) {
-  this->noticator_widget.set_length(value/127.0);
 }
