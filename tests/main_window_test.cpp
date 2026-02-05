@@ -24,24 +24,38 @@
 #include "noticator_widget.hpp"
 #include <QHBoxLayout>
 #include <QWidget>
+#include <QDial>
 
 MainWindowTest::MainWindowTest(QWidget *parent)
   : QMainWindow(parent)
   , noticator_widget(this)
 {
+  QDial *dial_length = new QDial(this);
+  QDial *dial_intensity = new QDial(this);
   QWidget *widget = new QWidget(this);
   QHBoxLayout *layout = new QHBoxLayout(widget);
 
+  dial_length->setMaximum(1.0);
+  dial_intensity->setMaximum(127);
   setCentralWidget(widget);
   widget->setLayout(layout);
   layout->addWidget(&noticator_widget);
-  
+  layout->addWidget(dial_length);
+  layout->addWidget(dial_intensity);
+
+  connect(dial_length, &QDial::valueChanged, this, &MainWindowTest::set_length_scale);
+  connect(dial_intensity, &QDial::valueChanged, &this->noticator_widget, &NoticatorWidget::set_intensity);
   timerId = startTimer(1000);
 }
 
 MainWindowTest::~MainWindowTest() {
   killTimer(timerId);
 }
+
+void MainWindowTest::set_length_scale(int value) {
+  this->noticator_widget.set_length(value/127.0);
+}
+
 
 void MainWindowTest::timerEvent(QTimerEvent *event) {
   noticator_widget.set_intensity(50);
