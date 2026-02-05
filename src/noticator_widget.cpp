@@ -26,9 +26,9 @@
 
 #include "noticator_widget.hpp"
 
-NoticatorWidget::NoticatorWidget(QWidget *parent)
- : note_value(0), length(0.0), intensity(0) {
-  setMinimumSize(100,100);
+NoticatorWidget::NoticatorWidget(QWidget *parent, size_t min_width, size_t min_height)
+    : min_width(min_width), min_height(min_height), note_value(0), length(0.0), intensity(0) {
+  setMinimumSize(min_width, min_height);
   setPalette(QPalette(QColor(200, 200, 200), QColor(20, 0, 70)));
   setAutoFillBackground(true);
   //TODO: generate widget

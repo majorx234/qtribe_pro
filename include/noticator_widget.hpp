@@ -28,7 +28,7 @@
 class NoticatorWidget : public QWidget{
   Q_OBJECT
  public:
-  NoticatorWidget(QWidget* parent);
+  NoticatorWidget(QWidget* parent, size_t min_width, size_t min_height);
   ~NoticatorWidget();
 
  public slots:
@@ -38,6 +38,8 @@ class NoticatorWidget : public QWidget{
   void set_full_note(int note_value, int length, int intensity);
 
  private:
+  size_t min_width;
+  size_t min_height;
   int note_value;
   float length;
   int intensity;

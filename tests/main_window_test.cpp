@@ -28,7 +28,7 @@
 
 MainWindowTest::MainWindowTest(QWidget *parent)
   : QMainWindow(parent)
-  , noticator_widget(this)
+  , noticator_widget(this, 50, 50)
 {
   QDial *dial_length = new QDial(this);
   QDial *dial_intensity = new QDial(this);
@@ -48,6 +48,7 @@ MainWindowTest::MainWindowTest(QWidget *parent)
   dial_length->setValue(63);
   dial_intensity->setValue(63);
   noticator_widget.update();
+  this->setFixedSize(QSize(210,70));
 }
 
 MainWindowTest::~MainWindowTest() {
