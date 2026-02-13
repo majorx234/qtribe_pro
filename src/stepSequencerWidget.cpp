@@ -748,7 +748,7 @@ void stepSequencerWidget::writeButton_clicked() {
 }
 
 void stepSequencerWidget::loadButton_clicked() {
-  //Currently no GUI widget for this.
+  // Currently no GUI widget for this.
   mySequencerCore->stopSequence();
   playing=0;
   std::ifstream fin((char*)bankFile.c_str());
@@ -758,7 +758,7 @@ void stepSequencerWidget::loadButton_clicked() {
   mySequencerCore->loadBank(file_content);
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
 
-  //set up our UI state to something resembling the default.
+  // set up our UI state to something resembling the default.
   ui->play->setDown(true);
   ui->bpm->setValue(myPattern->getPatternTempo());
   patternStepSong=1;
