@@ -22,6 +22,8 @@
 
 #include "sequencerCore.hpp"
 
+#include <iostream>
+#include <ostream>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -235,6 +237,7 @@ void SequencerCore::setActiveSequence(int seq) {
 }
 
 void SequencerCore::loadBank(std::string file_content) {
+  std::cout << "file_content: " << file_content << std::endl;
   std::stringstream fin;
   fin << file_content;
   const int LINE_LENGTH = 100;
@@ -254,9 +257,11 @@ void SequencerCore::loadBank(std::string file_content) {
   int patternLength = 0;
   int currentPatternIndex = 0;
 
+  //  for(std::string line{}; std::getline(fin, line); )
   while( fin.getline(str,LINE_LENGTH) ) {
-      //use std:strings to make this easy
+    //use std:strings to make this easy
     std::string line(str);
+    std::cout << "line: " << line << std::endl;
     std::vector<std::string> parts;
     const char delim = ':';
 

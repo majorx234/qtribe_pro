@@ -25,8 +25,10 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QPalette>
+#include <iostream>
 #include <qdir.h>
 #include <QButtonGroup>
+#include <sstream>
 
 #include "stepSequencerWidget.hpp"
 
@@ -79,14 +81,16 @@ stepSequencerWidget::stepSequencerWidget(QWidget *parent,
   if (QFile::exists(homePath)) {
     fprintf(stdout,"Loading Bankfile from path: %s\n", homePath.toStdString().c_str());
     std::ifstream fin((char*)homePath.toStdString().c_str());
-    std::string file_content;
-    fin >> file_content;
+    std::ostringstream ss;
+    ss << fin.rdbuf();
+    std::string file_content = ss.str();
     mySequencerCore->loadBank(file_content);
   } else if (QFile::exists(defaultPath)) {
     fprintf(stdout,"Loading Bankfile from path: %s\n",defaultPath.toStdString().c_str());
     std::ifstream fin((char*)defaultPath.toStdString().c_str());
-    std::string file_content;
-    fin >> file_content;
+    std::ostringstream ss;
+    ss << fin.rdbuf();
+    std::string file_content = ss.str();
     mySequencerCore->loadBank(file_content);
   } else {
     fprintf(stdout,"Creating new Bank\n");
@@ -162,7 +166,7 @@ void stepSequencerWidget::setStepButtonColors() {
 
   for (int i=0;i< 16;i++) {
     QAbstractButton* myButton = ui->sequenceGroup->button(i);
-    myStep=mySequence->getStep(i+(selectedMeasure*16));
+    myStep = mySequence->getStep(i+(selectedMeasure*16));
     if (myButton->isChecked()) {
       myButton->setChecked(false);
     }
@@ -195,7 +199,7 @@ void stepSequencerWidget::chainClearStepButtonColors() {
   }
 
   //light up the currently playing chain index
-  int myButtonIndex=myPatternChain->getCurrentPatternIndex();
+  int myButtonIndex = myPatternChain->getCurrentPatternIndex();
 
   QAbstractButton* chainButton = ui->sequenceGroup->button(myButtonIndex);
   pal.setColor( QPalette::Active, QPalette::Button, buttonPlayColor);
@@ -211,7 +215,7 @@ void stepSequencerWidget::setSynthPartButtonColors() {
   stepSequence* mySequence;
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
   stepSequence* activeSequence=myPattern->getActiveSequence();
-  for (int i=0;i< 4;i++) {
+  for (int i=0;i<4;i++) {
     QToolButton* myButton=(QToolButton*) ui->synthParts->button(i);
     mySequence=myPattern->getSequence(i+1);
 
@@ -229,11 +233,12 @@ void stepSequencerWidget::setSynthPartButtonColors() {
     }
   }
 }
+
 void stepSequencerWidget::setDrumPartButtonColors() {
   stepSequence* mySequence;
   stepPattern* myPattern=mySequencerCore->getCurrentPattern();
   stepSequence* activeSequence=myPattern->getActiveSequence();
-  for (int i=0;i< 9;i++) {
+  for (int i=0; i<9;i++) {
     QAbstractButton* myButton = ui->drumParts->button(i);
     //offset for 0-base and synthParts
     mySequence=myPattern->getSequence(i+5);
@@ -269,7 +274,7 @@ void stepSequencerWidget::updatePlaybackPosition() {
       delayedPatternChange = 1;
     }
 
-    if (s==0 && delayedPatternChange) {
+    if (s == 0 && delayedPatternChange) {
       //we're in song mode, so we need to switch to the next pattern in the chain,
       //and update the step key to show the current pattern
 
@@ -355,16 +360,16 @@ void stepSequencerWidget::updateGui() {
 
 void stepSequencerWidget::muteParts_toggled(bool b) {
   if (b) {
-    muteMode=1;
+    muteMode = 1;
   } else {
-    muteMode=0;
+    muteMode = 0;
   }
 }
 void stepSequencerWidget::stepModeGroup_clicked(int mode) {
   //we are in step mode (arg is 0 - on./off, 1 - note - 2- length 3 -velocity)
   stepMode = mode;
   patternStepSong = 1;
-   if (stepMode==0) {
+   if (stepMode == 0) {
     ui->sequenceGroup->setExclusive(false);
     ui->dataDisplay->setText("qTribe");
     //now we need to go through our steps and set them on or off depending on our underlying step model.
@@ -380,7 +385,7 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
       if (myStep->isOn) {
         myButton->setChecked(true);
         pal.setColor( QPalette::Active, QPalette::Button, buttonOnColor);
-        myButton->setPalette( pal ); 
+        myButton->setPalette( pal );
       } else {
         myButton->setChecked(false);
         pal.setColor( QPalette::Active, QPalette::Button, buttonOffColor);
@@ -441,8 +446,9 @@ void stepSequencerWidget::stepModeGroup_clicked(int mode) {
     ui->sequenceGroup->setExclusive(true);
   }
 }
+
 void stepSequencerWidget::synthParts_clicked(int sequencer_part_index) {
-  int sequencerPart=sequencer_part_index+1;
+  int sequencerPart = sequencer_part_index+1;
   //we need to switch our active sequence and update our display depending on the mode
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
   stepSequence* mySequence = myPattern->getSequence(sequencerPart);
@@ -745,7 +751,11 @@ void stepSequencerWidget::loadButton_clicked() {
   //Currently no GUI widget for this.
   mySequencerCore->stopSequence();
   playing=0;
-  mySequencerCore->loadBank((char*)bankFile.c_str());
+  std::ifstream fin((char*)bankFile.c_str());
+  std::ostringstream ss;
+  ss << fin.rdbuf();
+  std::string file_content = ss.str();
+  mySequencerCore->loadBank(file_content);
   stepPattern* myPattern = mySequencerCore->getCurrentPattern();
 
   //set up our UI state to something resembling the default.
